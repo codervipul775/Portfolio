@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://codervipul775.vercel.app/sitemap.xml
