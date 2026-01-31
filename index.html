@@ -1,509 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vipul Yadav (codervipul775) - Creative Developer & Full-Stack Engineer</title>
+    <title>Vipul Yadav | Creative Developer</title>
 
-    <!-- Primary SEO Meta Tags -->
-    <meta name="description" content="Hi, I'm Vipul Yadav (codervipul775) — a creative full-stack developer passionate about building modern web apps using React, Node.js, and MongoDB. Explore my projects, GitHub, and portfolio.">
-    <meta name="keywords" content="Vipul Yadav, codervipul775, web developer, React developer, full stack developer, MERN developer, portfolio, GitHub, LinkedIn">
-    <meta name="author" content="Vipul Yadav">
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Portfolio of Vipul Yadav, a creative full-stack developer and AI enthusiast. Explore modern web experiences.">
 
-    <!-- Open Graph (for social media previews) -->
-    <meta property="og:title" content="Vipul Yadav (codervipul775) - Creative Developer">
-    <meta property="og:description" content="Explore my portfolio showcasing web apps, design, and full-stack projects built with React and Node.js.">
-    <meta property="og:image" content="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j">
-    <meta property="og:url" content="https://codervipul775.vercel.app/">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vipul Yadav (codervipul775) - Creative Developer">
-    <meta name="twitter:description" content="Full Stack Developer | React | Node.js | MERN | View projects and connect with me.">
-    <meta name="twitter:image" content="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j">
-
-    <!-- Canonical Link -->
-    <link rel="canonical" href="https://codervipul775.vercel.app/" />
-
-    <!-- Favicon -->
-    <link rel="icon" href="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j" type="image/png">
-
-    <!-- Fonts & CSS -->
-    <link rel="stylesheet" href="./assets/css/index.css">
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/2e2567c8e8.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
 
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Vipul Yadav",
-      "alternateName": "codervipul775",
-      "url": "https://codervipul775.vercel.app/",
-      "image": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j",
-      "jobTitle": "Full Stack Developer",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Newton School of Technology"
-      },
-      "sameAs": [
-        "https://github.com/codervipul775",
-        "https://www.linkedin.com/in/codervipul775/",
-        "https://codervipul775.vercel.app/"
-      ],
-      "knowsAbout": ["React.js", "Node.js", "MongoDB", "HTML", "CSS", "JavaScript"]
-    }
-    </script>
-    <meta name="google-site-verification" content="BvlWGaO54VDPosVbCef24spiozor0hLgS4T7vEtc5RM" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <script src="https://kit.fontawesome.com/2e2567c8e8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons-font@v9/font/simple-icons.min.css">
+
+    <!-- 3D Background Engine (Three.js + Vanta.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+
 </head>
+
 <body>
-    <!-- Navigation -->
+    <!-- Interactive 3D Background -->
+    <div id="vanta-bg"></div>
+    <div class="mouse-blob" id="mouse-blob"></div>
+    <div id="cursor"></div>
+
+    <!-- Navigation Header -->
     <header>
         <nav>
-            <div class="left">
-                <a class="nav-logo" href="index.html">VY</a>
+            <a href="#home" class="nav-logo">VY</a>
+            <div class="nav-links">
+                <a href="#about" class="nav-btn">About</a>
+                <a href="#projects" class="nav-btn">Works</a>
+                <a href="#contact" class="nav-btn">Contact</a>
             </div>
-            <div class="right">
-                <button class="mobile-menu-btn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="nav-links">
-                    <a class="nav-btn active" href="#home">Home</a>
-                    <a class="nav-btn" href="#about">About</a>
-                    <a class="nav-btn" href="#skills">Skills</a>
-                    <a class="nav-btn" href="#projects">Projects</a>
-                    <a class="nav-btn" href="#contact">Contact</a>
-                </div>
-            </div>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-section">
-        <div class="hero-content">
-            <div class="content-left">
-                <div class="avatar-container">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j" alt="Vipul Yadav" class="avatar">
-                    <div class="avatar-bg"></div>
-                </div>
-            </div>
-            <div class="content-right">
-                <span class="greeting">👋 Hello, I'm</span>
-                <h1>Vipul Yadav</h1>
-                <h2>Creative Developer</h2>
-                <h3>Building Digital Experiences</h3>
-                <p>I'm a passionate developer who loves creating beautiful and functional web applications. With expertise in modern web technologies, I bring ideas to life through clean code and intuitive design.</p>
-                <div class="cta-buttons">
-                    <a href="#contact" class="btn primary">Get in Touch</a>
-                    <a href="#projects" class="btn secondary">View Projects</a>
-                </div>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <span>Scroll Down</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
+    <div id="app-container">
+        <!-- Hero Section -->
+        <section id="home" class="hero-v2">
+            <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j"
+                alt="Vipul Yadav" class="avatar-hero reveal">
 
-    <!-- About Section -->
-    <section class="about-section" id="about">
-        <div class="section-header">
-            <h2>Know Who I'M</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Hi Everyone, I am <span class="highlight">Vipul Yadav</span> from <span class="highlight">Rewari, Haryana</span>.</p>
-                <p>I am currently a student at Newton School of Technology, Pune</p>
-                <p>I am pursuing my degree in Computer Science and Engineering with a specialization in Artificial Intelligence and Machine Learning.</p>
-                <p class="activities">Apart from coding, some other activities that I love to do!</p>
-                <ul class="activities-list">
-                    <li><i class="fas fa-gamepad"></i> Playing Games</li>
-                    <li><i class="fas fa-blog"></i>Watching Movies</li>
-                    <li><i class="fas fa-plane"></i> Travelling</li>
-                </ul>
-                <p class="quote">"The only way to do great work is to love what you do."</p>
-                <p class="quote-author">— Vipul</p>
+            <h1 class="reveal">Creative<br>Developer</h1>
+            <div class="hero-cta reveal">
+                <a href="#projects" class="btn primary">Explore My Works <i class="fas fa-arrow-right"></i></a>
+                <a href="#contact" class="btn secondary">Say Hello <i class="fas fa-paper-plane"></i></a>
             </div>
-            <div class="about-image">
-                <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/8pscko" alt="About Me">
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="skills-section">
-        <div class="section-header">
-            <h2>Professional Skillset</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="skills-container">
-            <div class="skills-category">
-                <h3>Frontend Development</h3>
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <i class="fab fa-html5"></i>
-                        <span>HTML5</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fab fa-css3-alt"></i>
-                        <span>CSS3</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fab fa-react"></i>
-                        <span>React.js</span>
-                    </div>
+        <!-- Bento Section (About + Skills) -->
+        <section id="about" class="bento-grid">
+            <!-- Box 1: Detailed Bio (3x1) -->
+            <div class="bento-item bento-1 reveal">
+                <h3><i class="fas fa-user-astronaut"></i> Know Who I Am</h3>
+                <p>Hi Everyone, I am <strong>Vipul Yadav</strong> from <strong>Rewari, Haryana</strong>.</p>
+                <p style="margin-top: 1rem;">I am currently a student at Newton School of Technology, Pune.</p>
+                <p>I am pursuing my degree in Computer Science and Engineering with a specialization in Artificial
+                    Intelligence and Machine Learning.</p>
+
+                <h4 style="margin-top: 1.5rem; color: var(--text-main);"><i class="fas fa-heart"></i> Apart from coding,
+                    I love to:</h4>
+                <div class="skill-tags" style="margin-top: 1rem;">
+                    <span class="tag"><i class="fas fa-gamepad"></i> Playing Games</span>
+                    <span class="tag"><i class="fas fa-film"></i> Watching Movies</span>
+                    <span class="tag"><i class="fas fa-plane"></i> Travelling</span>
                 </div>
+
+                <p style="margin-top: 2rem; font-style: italic; color: var(--primary); text-align: center;">
+                    "The only way to do great work is to love what you do."<br>
+                    <span style="font-weight: 800;">— Vipul</span>
+                </p>
             </div>
 
-            <div class="skills-category">
-                <h3>Backend Development and Databases</h3>
-                <div class="skills-grid">
-                    
-                    <div class="skill-card">
-                        <i class="fab fa-node"></i>
-                        <span>Node.js/Express.js</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fas fa-database"></i>
-                        <span>MySQL</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fas fa-envira"></i>
-                        <span>MongoDB</span>
-                    </div>
-                    
-                    
-                </div>
+            <!-- Box 2: Portrait Image (1x1 Right) -->
+            <div class="bento-item bento-img reveal">
+                <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/8pscko"
+                    alt="Vipul Yadav Portrait">
             </div>
 
-            <div class="skills-category">
-                <h3>Languages</h3>
-                <div class="skills-grid">
-                    
-                    <div class="skill-card">
-                        <i class="fab fa-python"></i>
-                        <span>Python</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fab fa-java"></i>
-                        <span>Java</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fab fa-js"></i>
-                        <span>JavaScript</span>
-                    </div>
-                    
-                    
-                </div>
-            </div>
-            
+            <!-- Box 3: Professional Skillset (Wide 4x2) -->
+            <div class="bento-item bento-skills-wide reveal">
+                <h2 style="margin-bottom: 40px; text-align: center;"><i class="fas fa-laptop-code"></i> Professional
+                    Skillset</h2>
 
-            <div class="skills-category">
-                <h3>Tools & Technologies/Others</h3>
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <i class="fab fa-git-alt"></i>
-                        <span>Git</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fab fa-docker"></i>
-                        <span>Docker</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fas fa-terminal"></i>
-                        <span>Terminal</span>
-                    </div>
-                    <div class="skill-card">
-                        <i class="fas fa-brain"></i>
-                        <span>DSA</span>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </section>
+                <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 40px;">
+                    <!-- Skills side -->
+                    <div class="skills-main-area">
+                        <div class="skills-category">
+                            <h4>Specializations</h4>
+                            <div class="large-icon-grid">
+                                <div class="skill-card-large glow-card" style="border-color: var(--primary);"><i
+                                        class="fas fa-brain"></i><span>AI & ML</span></div>
+                                <div class="skill-card-large"><i class="fas fa-sitemap"></i><span>System Design</span>
+                                </div>
+                                <div class="skill-card-large"><i class="fas fa-chart-line"></i><span>Data
+                                        Analytics</span></div>
+                                <div class="skill-card-large"><i class="fas fa-file-excel"></i><span>Excel/Data</span>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects-section">
-        <div class="section-header">
-            <h2>My Projects</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/fo0dse" alt="Project 1">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://www.influenz.co.in/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            <a href="https://github.com/codervipul775/Marketing" class="project-link"><i class="fab fa-github"></i></a>
-                            
+                        <div class="skills-category">
+                            <h4>Frontend & Languages</h4>
+                            <div class="large-icon-grid">
+                                <div class="skill-card-large"><i class="fab fa-react"></i><span>React.js</span></div>
+                                <div class="skill-card-large"><i class="fab fa-js"></i><span>JavaScript</span></div>
+                                <div class="skill-card-large"><i class="fab fa-python"></i><span>Python</span></div>
+                                <div class="skill-card-large"><i class="fab fa-java"></i><span>Java</span></div>
+                                <div class="skill-card-large"><i class="si si-nextdotjs"></i><span>Next.js</span></div>
+
+                            </div>
+                        </div>
+
+                        <div class="skills-category">
+                            <h4>Backend & Tools</h4>
+                            <div class="large-icon-grid">
+                                <div class="skill-card-large"><i class="fab fa-node-js"></i><span>Node/Express</span>
+                                </div>
+                                <div class="skill-card-large"><i class="fas fa-database"></i><span>MongoDB</span></div>
+                                <div class="skill-card-large"><i class="fab fa-git-alt"></i><span>Git</span></div>
+                                <div class="skill-card-large"><i class="fab fa-docker"></i><span>Docker</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cool Dynamic side filling the "Dull Space" -->
+                    <div class="skills-side-area" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="bento-item glow-card"
+                            style="background: rgba(191, 54, 255, 0.05); padding: 24px; border-color: rgba(191, 54, 255, 0.3); opacity: 1 !important; transform: none !important;">
+                            <h4
+                                style="font-size: 0.9rem; color: var(--primary); margin-bottom: 12px; border-left: 2px solid var(--primary); padding-left: 8px;">
+                                <i class="fas fa-satellite-dish"></i> Live Status
+                            </h4>
+                            <p style="font-size: 0.9rem; margin-bottom: 8px;"><strong>Currently:</strong> Part-time AI
+                                Researcher & Web Architect.</p>
+                            <p style="font-size: 0.8rem; color: var(--text-dim);">Exploring Neural Networks and Agentic
+                                RAG workflows.</p>
+                        </div>
+                        <div class="bento-item"
+                            style="background: rgba(0, 243, 255, 0.05); padding: 24px; border-color: rgba(0, 243, 255, 0.3); opacity: 1 !important; transform: none !important;">
+                            <h4
+                                style="font-size: 0.9rem; color: #00f3ff; margin-bottom: 12px; border-left: 2px solid #00f3ff; padding-left: 8px;">
+                                <i class="fas fa-bolt"></i> Learning Stack
+                            </h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <span
+                                    style="font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;">PyTorch</span>
+                                <span
+                                    style="font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;">Next.js
+                                    14</span>
+                                <span
+                                    style="font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;">Kubernetes</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="project-content">
-                    <h3>Influenz (Marketing Website)</h3>
-                    <p>Developed a fully working website for a marketing company using React.js.</p>
-                    <div class="project-tech">
-                        <span>React.js</span>
-                        <span>JavaScript</span>
-                        
+            </div>
+        </section>
+
+        <!-- Projects Showcase -->
+        <section id="projects">
+            <div class="projects-header reveal">
+                <h2>Works</h2>
+            </div>
+
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/830usn"
+                        alt="VOICE NEURAL">
+                </div>
+                <div class="project-info">
+                    <h4>VOICE NEURAL</h4>
+                    <p>Voice Neural is a cutting-edge AI-powered voice agent that tekes your question and replies back
+                        in AI voice.</p>
+                    <div class="skill-tags">
+                        <span class="tag">Next.js</span>
+                        <span class="tag">FastAPI</span>
+                        <span class="tag">Deepgram</span>
+                        <span class="tag">Redis</span>
+                        <span class="tag">Python</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://voice-agent-theta-six.vercel.app/" target="_blank"
+                            class="btn primary small">Live
+                            Demo</a>
+                        <a href="https://github.com/codervipul775/Voice-Agent" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/081t17" alt="Project 2">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://www.nstsdc.org/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            <a href="https://github.com/codervipul775/DevCoin1" class="project-link"><i class="fab fa-github"></i></a>
-                            
-                        </div>
-                    </div>
+
+
+            <!-- Project 1: NoteNest -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/q3ixjw"
+                        alt="NoteNest">
                 </div>
-                <div class="project-content">
-                    <h3>Dev Club Website</h3>
-                    <p>Designed the college dev club website using HTML, Tailwind CSS and JavaScript.</p>
-                    <div class="project-tech">
-                        <span>HTML</span>
-                        <span>Tailwind CSS</span>
-                        <span>JavaScript</span>
+                <div class="project-info">
+                    <h4>NoteNest</h4>
+                    <p>An amazing notes sharing platform integrated with intelligent AI summaries and search features.
+                    </p>
+                    <div class="skill-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Express.js</span>
+                        <span class="tag">MongoDB</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://notes-shaaring-platform.vercel.app/" target="_blank"
+                            class="btn primary small">Live Demo</a>
+                        <a href="https://github.com/nst-sdc/NotesShaaring-Platform" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/45xyqy" alt="Project 3">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://local-sports-club.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            <a href="https://github.com/codervipul775/Local_Sports_Club" class="project-link"><i class="fab fa-github"></i></a>
-                            
-                        </div>
-                    </div>
+            <!-- Project 2: Real Estate -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/51atr4"
+                        alt="Real Estate">
                 </div>
-                <div class="project-content">
-                    <h3>Local Sports Club</h3>
-                    <p>Developed a fully working website for a local sports club using HTML,CSS and JavaScript.</p>
-                    <div class="project-tech">
-                        <span>JavaScript</span>
-                        <span>HTML</span>
-                        <span>CSS</span>
+                <div class="project-info">
+                    <h4>Estate Elite</h4>
+                    <p>Designed a comprehensive real estate listing platform with advanced filtering and dynamic data
+                        handling.</p>
+                    <div class="skill-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">Cloudinary</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/q3ixjw">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://github.com/nst-sdc/NotesShaaring-Platform" class="project-link"><i class="fab fa-github"></i></a>
-                            <a href="https://notes-shaaring-platform.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3>NoteNest</h3>
-                    <p>An amazing notes sharing platform integrated with some features using AI .</p>
-                    <div class="project-tech">
-                        <span>React.js</span>
-                        <span>Node.js</span>
-                        <span>Express.js</span>
-                        <span>MongoDB</span>
-                        
+                    <div class="project-actions">
+                        <a href="https://real-estate-qebn.vercel.app/" target="_blank" class="btn primary small">Live
+                            Demo</a>
+                        <a href="https://github.com/codervipul775/Real-Estate" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/jfs1bw" alt="Project 5">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://github.com/codervipul775/Solar-System" class="project-link"><i class="fab fa-github"></i></a>
-                            <a href="https://solar-system-eta-sepia.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                           
-                        </div>
-                    </div>
+            <!-- Project 3: Solar System -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/jfs1bw"
+                        alt="Solar System">
                 </div>
-                <div class="project-content">
-                    <h3>3D Solar System</h3>
-                    <p>Built an amazing 3d solar system design with speed adjustment feature.</p>
-                    <div class="project-tech">
-                        <span>HTML/CSS</span>
-                        <span>Three.js</span>
-                        <span>Javascript</span>
-                        
+                <div class="project-info">
+                    <h4>3D Cosmic Odyssey</h4>
+                    <p>Built an amazing 3D solar system design with speed adjustment and interactive celestial bodies.
+                    </p>
+                    <div class="skill-tags">
+                        <span class="tag">Three.js</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">WebGL</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/eqnqvb" alt="Project 1">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://drop-box1.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            <a href="https://github.com/codervipul775/DropBox1" class="project-link"><i class="fab fa-github"></i></a>
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3>DropBox1</h3>
-                    <p>A platform for file storage and sharing built with React.js.</p>
-                    <div class="project-tech">
-                        <span>React.js</span>
-                        <span>JavaScript</span>
-                        <span>Supabase</span>
-                        
+                    <div class="project-actions">
+                        <a href="https://solar-system-eta-sepia.vercel.app/" target="_blank"
+                            class="btn primary small">Live Demo</a>
+                        <a href="https://github.com/codervipul775/Solar-System" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/51atr4" alt="Project 2">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://real-estate-qebn.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                            <a href="https://github.com/codervipul775/Real-Estate" class="project-link"><i class="fab fa-github"></i></a>
-                            
-                        </div>
-                    </div>
+            <!-- Project 4: Influenz -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/fo0dse"
+                        alt="Influenz">
                 </div>
-                <div class="project-content">
-                    <h3>Real Estate Listing</h3>
-                    <p>Designed a real estate listing website.</p>
-                    <div class="project-tech">
-                        <span>React.js</span>
-                        <span>Node.js</span>
-                        <span>JavaScript</span>
-                        <span>Supabase</span>
-                        <span>PostgreSQL</span>
-                        <span>Cloudinary</span>
+                <div class="project-info">
+                    <h4>Influenz</h4>
+                    <p>Developed a fully functional marketing landing page for a high-growth creative agency.</p>
+                    <div class="skill-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Framer Motion</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://www.influenz.co.in/" target="_blank" class="btn primary small">Live Demo</a>
+                        <a href="https://github.com/codervipul775/Marketing" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/m8ofrv">
-                    <div class="project-overlay">
-                        <div class="project-links">
-                            <a href="https://github.com/codervipul775/End2Start---GAME" class="project-link"><i class="fab fa-github"></i></a>
-                            <a href="https://end2-start-game.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
-                           
-                        </div>
-                    </div>
+            <!-- Project 5: DropBox1 -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/eqnqvb"
+                        alt="DropBox1">
                 </div>
-                <div class="project-content">
-                    <h3>End2Start Game</h3>
-                    <p>End2Start is an engaging two-player word game built using React.js, HTML, and CSS. The game tests players' vocabulary and quick thinking.</p>
-                    <div class="project-tech">
-                        <span>HTML</span>
-                        <span>CSS</span>
-                        <span>React.js</span>
-                        
+                <div class="project-info">
+                    <h4>Cloud Haven</h4>
+                    <p>A secure platform for file storage and sharing, built for modern distributed teams.</p>
+                    <div class="skill-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">Auth</span>
                     </div>
-                        
+                    <div class="project-actions">
+                        <a href="https://drop-box1.vercel.app/" target="_blank" class="btn primary small">Live Demo</a>
+                        <a href="https://github.com/codervipul775/DropBox1" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
 
-            
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact-section" id="contact">
-        <div class="section-header">
-            <h2>Get in Touch</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="contact-content">
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <div class="contact-item-content">
-                        <h3>Email</h3>
-                        <a href="mailto:ydvvipul2005@gmail.com">ydvvipul2005@gmail.com</a>
-                    </div>
+            <!-- Project 6: Local Sports Club -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/45xyqy"
+                        alt="Local Sports Club">
                 </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <div class="contact-item-content">
-                        <h3>Phone</h3>
-                        <p>+91 9306800653</p>
+                <div class="project-info">
+                    <h4>Sports Nexus</h4>
+                    <p>A fully functional website for local sports clubs with event management features.</p>
+                    <div class="skill-tags">
+                        <span class="tag">HTML/CSS</span>
+                        <span class="tag">JavaScript</span>
                     </div>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-linkedin"></i>
-                    <div class="contact-item-content">
-                        <h3>LinkedIn</h3>
-                        <a href="https://linkedin.com/in/vipul-yadav-b0a82231a" target="_blank">linkedin.com/in/vipul-yadav-b0a82231a</a>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-instagram"></i>
-                    <div class="contact-item-content">
-                        <h3>Instagram</h3>
-                        <a href="https://www.instagram.com/" target="_blank">@vipul_270805</a>
+                    <div class="project-actions">
+                        <a href="https://local-sports-club.vercel.app/" target="_blank" class="btn primary small">Live
+                            Demo</a>
+                        <a href="https://github.com/codervipul775/Local_Sports_Club" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Social Links -->
-    <section class="social-links">
-        <h3>Connect With Me</h3>
-        <div class="icons">
-            <a href="mailto:ydvvipul2005@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
-            <a href="linkedin.com/in/vipul-yadav-b0a82231a" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="tel:9306800653"><i class="fas fa-phone"></i></a>
-            <a href="https://github.com/codervipul775" target="_blank"><i class="fab fa-github"></i></a>
-        
-        </div>
-    </section>
+            <!-- Project 7: End2Start -->
+            <div class="project-v2 reveal">
+                <div class="project-img-container">
+                    <img src="https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/m8ofrv"
+                        alt="End2Start Game">
+                </div>
+                <div class="project-info">
+                    <h4>End2Start</h4>
+                    <p>An engaging two-player word game that tests vocabulary and strategic thinking.</p>
+                    <div class="skill-tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Game Dev</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://end2-start-game.vercel.app/" target="_blank" class="btn primary small">Play
+                            Now</a>
+                        <a href="https://github.com/codervipul775/End2Start---GAME" target="_blank"
+                            class="btn secondary small"><i class="fab fa-github"></i> Repo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Vipul Yadav. All rights reserved.</p>
-    </footer>
+        <!-- Footer / Contact Card -->
+        <section id="contact" style="margin-top: 100px;">
+            <div class="bento-item reveal" style="text-align: center; gap: 24px; padding: 60px;">
+                <h3 style="font-size: clamp(2rem, 8vw, 3.5rem); margin-bottom: 0;">Let's Build Faster</h3>
+                <p>Open for internships, freelance projects, and collaborations.</p>
 
+                <div class="social-links-bento" style="justify-content: center; margin: 20px 0;">
+                    <a href="https://github.com/codervipul775" target="_blank" class="social-circle"><i
+                            class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/vipul-yadav-b0a82231a" target="_blank" class="social-circle"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.instagram.com/vipul_270805" target="_blank" class="social-circle"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="mailto:ydvvipul2005@gmail.com" class="social-circle"><i class="far fa-envelope"></i></a>
+                    <a href="tel:+919306800653" class="social-circle"><i class="fas fa-phone"></i></a>
+                </div>
+
+                <div class="hero-cta" style="justify-content: center;">
+                    <a href="mailto:ydvvipul2005@gmail.com" class="btn primary">Start a Chat <i
+                            class="fas fa-comment-dots"></i></a>
+                    <a href="tel:+919306800653" class="btn secondary">Call Now <i class="fas fa-phone"></i></a>
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 40px; color: var(--text-dim);">© 2026 Vipul Yadav. Designed for
+                    the Future.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
     <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const blob = document.getElementById('mouse-blob');
+            const cursor = document.getElementById('cursor');
+            // const follower = document.getElementById('cursor-follower');
+            const themeToggle = document.getElementById('theme-toggle');
+            const root = document.documentElement;
 
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+            let vantaEffect = null;
+
+            function initVanta() {
+                const isLight = root.classList.contains('light-mode');
+                if (vantaEffect) vantaEffect.destroy();
+
+                vantaEffect = VANTA.GLOBE({
+                    el: "#vanta-bg",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    color: isLight ? 0x007aff : 0xbf36ff,
+                    color2: isLight ? 0x5856d6 : 0x00f3ff,
+                    size: 0.80,
+                    backgroundColor: isLight ? 0xf0f4f9 : 0x000000
+                });
+            }
+
+            // Theme Toggle Logic
+            themeToggle.addEventListener('click', () => {
+                root.classList.toggle('light-mode');
+                const isLight = root.classList.contains('light-mode');
+                themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                initVanta(); // Re-initialize Vanta with new colors
+            });
+
+            // Load saved theme
+            if (localStorage.getItem('theme') === 'light') {
+                root.classList.add('light-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+
+            // Initial Vanta call
+            initVanta();
+
+            // Mouse Move Effects
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX;
+                const y = e.clientY;
+
+                // Blob follower
+                blob.style.transform = `translate(${x - 200}px, ${y - 200}px)`;
+
+                // Custom cursor
+                cursor.style.transform = `translate(${x - 6}px, ${y - 6}px)`;
+
+                // Cursor follower (delay)
+                // if (follower) {
+                //     setTimeout(() => {
+                //         follower.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+                //     }, 50);
+                // }
+            });
+
+            // Hover interactions for links
+            document.querySelectorAll('a, .btn, .bento-item, button').forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    cursor.style.backgroundColor = 'var(--primary)';
+                });
+                link.addEventListener('mouseleave', () => {
+                    cursor.style.backgroundColor = 'var(--text-main)';
                 });
             });
+
+            // Intersection Observer for Reveal
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(40px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                observer.observe(el);
+            });
+
+            // 3D Tilt Effect for Bento Items
+            document.querySelectorAll('.bento-item').forEach(item => {
+                item.addEventListener('mousemove', (e) => {
+                    const rect = item.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = (y - centerY) / 15;
+                    const rotateY = (centerX - x) / 15;
+
+                    item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                });
+
+                item.addEventListener('mouseleave', () => {
+                    item.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+                });
+            });
+
+            // Add dynamic animation class
+            const style = document.createElement('style');
+            style.textContent = `
+                .reveal-active {
+                    opacity: 1 !important;
+                    transform: translateY(0) !important;
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>
+
 </html>
