@@ -22,7 +22,7 @@
 
     <!-- 3D Background Engine (Three.js + Vanta.js) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
 
 </head>
 
@@ -97,7 +97,7 @@
                 <h2 style="margin-bottom: 40px; text-align: center;"><i class="fas fa-laptop-code"></i> Professional
                     Skillset</h2>
 
-                <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 40px;">
+                <div class="skills-inner-grid">
                     <!-- Skills side -->
                     <div class="skills-main-area">
                         <div class="skills-category">
@@ -165,6 +165,29 @@
                                     14</span>
                                 <span
                                     style="font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;">Kubernetes</span>
+                            </div>
+                        </div>
+
+                        <!-- Problem Solving Card -->
+                        <div class="bento-item"
+                            style="background: rgba(255, 159, 64, 0.05); padding: 24px; border-color: rgba(255, 159, 64, 0.3); opacity: 1 !important; transform: none !important;">
+                            <h4
+                                style="font-size: 0.9rem; color: #ff9f40; margin-bottom: 12px; border-left: 2px solid #ff9f40; padding-left: 8px;">
+                                <i class="fas fa-brain"></i> Problem Solving
+                            </h4>
+                            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                                <a href="https://leetcode.com/u/codervipul/" target="_blank" title="LeetCode"
+                                    style="color: #FFA116; font-size: 1.5rem; transition: 0.3s;"
+                                    onmouseover="this.style.transform='scale(1.2)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                    <i class="si si-leetcode"></i>
+                                </a>
+                                <a href="https://codeforces.com/profile/codervipul" target="_blank" title="Codeforces"
+                                    style="color: #1F8ACB; font-size: 1.5rem; transition: 0.3s;"
+                                    onmouseover="this.style.transform='scale(1.2)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                    <i class="si si-codeforces"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -295,6 +318,10 @@
                             class="fab fa-github"></i></a>
                     <a href="https://linkedin.com/in/vipul-yadav-b0a82231a" target="_blank" class="social-circle"><i
                             class="fab fa-linkedin-in"></i></a>
+                    <a href="https://leetcode.com/codervipul775" target="_blank" class="social-circle"><i
+                            class="si si-leetcode"></i></a>
+                    <a href="https://codeforces.com/profile/codervipul775" target="_blank" class="social-circle"><i
+                            class="si si-codeforces"></i></a>
                     <a href="https://www.instagram.com/vipul_270805" target="_blank" class="social-circle"><i
                             class="fab fa-instagram"></i></a>
                     <a href="mailto:ydvvipul2005@gmail.com" class="social-circle"><i class="far fa-envelope"></i></a>
@@ -327,7 +354,7 @@
                 const isLight = root.classList.contains('light-mode');
                 if (vantaEffect) vantaEffect.destroy();
 
-                vantaEffect = VANTA.GLOBE({
+                vantaEffect = VANTA.WAVES({
                     el: "#vanta-bg",
                     mouseControls: true,
                     touchControls: true,
@@ -336,10 +363,11 @@
                     minWidth: 200.00,
                     scale: 1.00,
                     scaleMobile: 1.00,
-                    color: isLight ? 0x007aff : 0xbf36ff,
-                    color2: isLight ? 0x5856d6 : 0x00f3ff,
-                    size: 0.80,
-                    backgroundColor: isLight ? 0xf0f4f9 : 0x000000
+                    color: isLight ? 0xdaf2ff : 0x05051a,
+                    shininess: isLight ? 30.00 : 50.00,
+                    waveHeight: 20.00,
+                    waveSpeed: 0.50,
+                    zoom: 0.85
                 });
             }
 
