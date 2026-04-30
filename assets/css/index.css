@@ -619,6 +619,73 @@ nav {
   margin-top: 8px;
 }
 
+/* Projects Grid - More Projects */
+.projects-grid-header {
+  margin: 60px 0 40px;
+  text-align: left;
+}
+
+.projects-grid-header h3 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 80px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  backdrop-filter: var(--glass-effect);
+  -webkit-backdrop-filter: var(--glass-effect);
+  transition: var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(17, 169, 235, 0.1);
+}
+
+.project-card h4 {
+  font-size: 1.4rem;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.project-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  flex-grow: 1;
+}
+
+.project-card .skill-tags {
+  margin-top: 0;
+  gap: 8px;
+}
+
+.project-card .tag {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+.project-card .project-actions {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
 /* Custom Cursor */
 #cursor {
   position: fixed;
