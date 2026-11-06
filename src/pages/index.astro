@@ -1,0 +1,125 @@
+---
+// Phase 0 placeholder: renders every section unstyled to prove the content
+// pipeline end to end. Phase 1 replaces this with the real design.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getContent } from '../data/load';
+import { renderMarkdown } from '../lib/markdown';
+import { linkAttrs } from '../lib/links';
+
+const { site, sections } = await getContent();
+const visible = sections.filter((s) => s.visible);
+const socialsById = new Map(site.socials.map((s) => [s.id, s]));
+---
+
+<Base title={site.seo.title} description={site.seo.description} ogImage={site.seo.ogImage?.url}>
+  <nav class="flex gap-4 p-4">
+    <a href="#home" class="font-bold">{site.initials}</a>
+    {visible.filter((s) => s.navLabel).map((s) => <a href={`#${s.id}`}>{s.navLabel}</a>)}
+  </nav>
+
+  <main class="mx-auto max-w-4xl space-y-16 p-4 [&_a]:underline">
+    {
+      visible.map((section) => (
+        <section id={section.id} class="space-y-4">
+          {section.type === 'hero' && (
+            <>
+              {section.avatar && (
+                <Image src={section.avatar.url} alt={section.avatar.alt} width={120} height={120} class="rounded-full" loading="eager" />
+              )}
+              <h1 class="text-5xl font-extrabold whitespace-pre-line">{section.title}</h1>
+              <div class="flex flex-wrap gap-3">
+                {section.ctas.map((cta) => (
+                  <a href={cta.href} {...linkAttrs(cta.href)}>{cta.label} <Icon name={cta.icon} /></a>
+                ))}
+              </div>
+            </>
+          )}
+
+          {section.type === 'about' && (
+            <>
+              <h2 class="text-2xl font-bold">{section.heading}</h2>
+              <div class="space-y-2" set:html={renderMarkdown(section.body)} />
+              {section.portrait && (
+                <Image src={section.portrait.url} alt={section.portrait.alt} width={300} height={Math.round((300 * (section.portrait.height ?? 1)) / (section.portrait.width ?? 1))} />
+              )}
+              <h3>{section.interestsHeading}</h3>
+              <ul class="flex gap-4">{section.interests.map((i) => <li><Icon name={i.icon} /> {i.label}</li>)}</ul>
+              {section.quote && <blockquote>“{section.quote.text}” — {section.quote.author}</blockquote>}
+            </>
+          )}
+
+          {section.type === 'status' && (
+            <div class="grid gap-4 sm:grid-cols-3">
+              {section.cards.map((card) => (
+                <div class="rounded border border-neutral-800 p-4" style={{ borderColor: card.accent }}>
+                  <h3 class="font-bold"><Icon name={card.icon} /> {card.title}</h3>
+                  <div set:html={renderMarkdown(card.body)} />
+                  {card.chips.join(' · ')}
+                  {card.socialIds.map((sid) => socialsById.get(sid)).filter((s) => s !== undefined).map((s) => (
+                    <a href={s.href} {...linkAttrs(s.href)}><Icon name={s.icon} label={s.label} /></a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {section.type === 'skills' && (
+            <>
+              <h2 class="text-2xl font-bold">{section.heading}</h2>
+              {section.categories.map((cat) => (
+                <div>
+                  <h3 class="font-bold">{cat.name}</h3>
+                  <ul class="flex flex-wrap gap-3">{cat.skills.map((s) => <li><Icon name={s.icon} /> {s.name}</li>)}</ul>
+                </div>
+              ))}
+            </>
+          )}
+
+          {section.type === 'projects' && (
+            <>
+              <h2 class="text-2xl font-bold">{section.heading}</h2>
+              {section.projects.filter((p) => p.visible).map((p) => (
+                <article class="space-y-2">
+                  {p.featured && p.image && (
+                    <Image src={p.image.url} alt={p.image.alt} width={800} height={Math.round((800 * (p.image.height ?? 9)) / (p.image.width ?? 16))} />
+                  )}
+                  <h3 class="text-xl font-bold">{p.title}</h3>
+                  <p>{p.description}</p>
+                  <p class="text-sm">{p.tags.join(' · ')}</p>
+                  <div class="flex gap-3">
+                    {p.links.map((l) => <a href={l.href} {...linkAttrs(l.href)}><Icon name={l.icon} /> {l.label}</a>)}
+                  </div>
+                </article>
+              ))}
+              {section.cta && <a href={section.cta.href} {...linkAttrs(section.cta.href)}>{section.cta.label}</a>}
+            </>
+          )}
+
+          {section.type === 'contact' && (
+            <>
+              <h2 class="text-2xl font-bold">{section.heading}</h2>
+              <div set:html={renderMarkdown(section.body)} />
+              {section.showSocials && (
+                <div class="flex gap-4 text-2xl">
+                  {site.socials.map((s) => <a href={s.href} {...linkAttrs(s.href)}><Icon name={s.icon} label={s.label} /></a>)}
+                </div>
+              )}
+              <div class="flex gap-3">{section.ctas.map((cta) => <a href={cta.href}>{cta.label}</a>)}</div>
+            </>
+          )}
+
+          {section.type === 'custom' && (
+            <>
+              <h2 class="text-2xl font-bold">{section.heading}</h2>
+              <div set:html={renderMarkdown(section.body)} />
+            </>
+          )}
+        </section>
+      ))
+    }
+  </main>
+
+  <footer class="p-4 text-sm text-neutral-400">© {new Date().getFullYear()} {site.name}. {site.footer}</footer>
+</Base>

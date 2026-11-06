@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+/* Design tokens get fleshed out in Phase 1. */
+@theme {
+  --font-sans: 'Sora Variable', ui-sans-serif, system-ui, sans-serif;
+  --color-brand: #11a9eb;
+  --color-brand-2: #00f3ff;
+}

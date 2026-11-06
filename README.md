@@ -1,42 +1,39 @@
-# Portfolio Website
+# Portfolio
 
-## Overview
-This is a portfolio website project designed to showcase personal projects, skills, and contact information. It is structured to provide a clean and responsive user experience.
+Vipul Yadav's portfolio: [codervipul775.vercel.app](https://codervipul775.vercel.app)
 
-## Project Structure
-```
-portfolio-website
-├── src
-│   ├── css
-│   │   └── styles.css
-│   ├── js
-│   │   └── scripts.js
-│   └── index.html
-├── assets
-│   ├── fonts
-│   └── images
-├── .gitignore
-└── README.md
+Static [Astro](https://astro.build) site with a React Three Fiber 3D scene, content managed from `/admin` and stored in Supabase.
+
+## Develop
+
+Requires Node 24 (`nvm use`).
+
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # production build into dist/
+npm run check    # type-check
 ```
 
-## Features
-- Responsive design that adapts to various screen sizes.
-- Interactive elements powered by JavaScript.
-- Organized structure for easy navigation and maintenance.
+Without a `.env`, the site builds from `src/data/seed.json`. Copy `.env.example` to `.env` and fill it in to build from Supabase instead.
 
-## Setup Instructions
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```
-   cd portfolio-website
-   ```
-3. Open the `index.html` file in a web browser to view the portfolio.
+## How content works
 
-## Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any suggestions or improvements.
+- All content is one JSON document. Its shape lives in `src/data/schema.ts`, shared by the site build and the admin editor.
+- Supabase stores two copies: `draft` (what `/admin` edits) and `published` (what the build reads).
+- Publishing in `/admin` copies draft → published and triggers a Vercel rebuild. Images are downloaded and optimized at build time, so visitors never hit Supabase.
 
-## License
-This project is licensed under the MIT License.
+## Supabase setup (one time)
+
+1. Create a Supabase project.
+2. SQL Editor: run `supabase/schema.sql`, then `supabase/seed.sql`.
+3. Authentication → Sign In / Providers: turn off **Allow new users to sign up**.
+4. Authentication → Users → **Add user**: your email and password, with **Auto Confirm User** checked.
+5. SQL Editor: make that user the admin:
+   ```sql
+   insert into public.admins (user_id)
+   select id from auth.users where email = 'you@example.com';
+   ```
+6. Put the project URL and publishable key in `.env`, and in Vercel → Settings → Environment Variables.
+
+If you change `src/data/seed.json`, regenerate the SQL with `npm run seed:sql`.

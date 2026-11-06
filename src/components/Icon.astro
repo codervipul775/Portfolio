@@ -1,0 +1,20 @@
+---
+import { iconSvg } from '../lib/icons';
+
+interface Props {
+  name?: string;
+  class?: string;
+  /** Accessible name; without one the icon is hidden from screen readers. */
+  label?: string;
+}
+
+const { name, class: className, label } = Astro.props;
+const svg =
+  name &&
+  iconSvg(name, {
+    ...(className && { class: className }),
+    ...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' }),
+  });
+---
+
+{svg && <Fragment set:html={svg} />}
