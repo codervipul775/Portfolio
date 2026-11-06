@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdminApp from '../../admin/AdminApp';
+---
+
+<Base title="Portfolio admin" description="Edit the portfolio content" noindex>
+  <div class="scene-poster" aria-hidden="true"></div>
+  <AdminApp client:only="react" />
+</Base>

@@ -12,18 +12,23 @@ const icon = z.string().regex(/^[a-z0-9-]+:[a-z0-9-]+$/, 'Use an Iconify name li
 /** Short markdown: **bold**, *italic*, [links](https://…) and blank lines between paragraphs. */
 const markdown = z.string();
 
+/** Non-empty text, with a message the admin can show as-is. */
+const required = z.string().trim().min(1, 'Required');
+
+const url = z.url({ error: 'Must be a full link starting with https://' });
+
 /** https://…, mailto:…, tel:…, #section or /path */
-const href = z.string().trim().min(1);
+const href = required;
 
 export const imageSchema = z.object({
-  url: z.url(),
+  url,
   alt: z.string(),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
 });
 
 export const linkSchema = z.object({
-  label: z.string().min(1),
+  label: required,
   href,
   icon: icon.optional(),
   variant: z.enum(['primary', 'secondary']).default('secondary'),
@@ -31,7 +36,7 @@ export const linkSchema = z.object({
 
 export const socialSchema = z.object({
   id,
-  label: z.string().min(1),
+  label: required,
   href,
   icon,
 });
@@ -60,13 +65,13 @@ export const aboutSectionSchema = z.object({
   body: markdown,
   portrait: imageSchema.optional(),
   interestsHeading: z.string().optional(),
-  interests: z.array(z.object({ id, label: z.string().min(1), icon: icon.optional() })),
+  interests: z.array(z.object({ id, label: required, icon: icon.optional() })),
   quote: z.object({ text: z.string(), author: z.string() }).optional(),
 });
 
 export const statusCardSchema = z.object({
   id,
-  title: z.string().min(1),
+  title: required,
   icon: icon.optional(),
   accent: z.string().regex(/^#[0-9a-f]{6}$/i, 'Hex colour like #11a9eb').optional(),
   body: markdown.default(''),
@@ -84,14 +89,14 @@ export const statusSectionSchema = z.object({
 
 export const skillSchema = z.object({
   id,
-  name: z.string().min(1),
+  name: required,
   icon: icon.optional(),
   highlight: z.boolean().default(false),
 });
 
 export const skillCategorySchema = z.object({
   id,
-  name: z.string().min(1),
+  name: required,
   skills: z.array(skillSchema),
 });
 
@@ -104,7 +109,7 @@ export const skillsSectionSchema = z.object({
 
 export const projectSchema = z.object({
   id,
-  title: z.string().min(1),
+  title: required,
   description: z.string(),
   image: imageSchema.optional(),
   tags: z.array(z.string()),
@@ -156,15 +161,15 @@ export const contentSchema = z
   .object({
     version: z.literal(1),
     site: z.object({
-      name: z.string().min(1),
-      initials: z.string().min(1).max(3),
+      name: required,
+      initials: required.max(3, 'Up to 3 letters'),
       seo: z.object({
         title: z.string(),
         description: z.string(),
         ogImage: imageSchema.optional(),
       }),
       /** Copied into the build and served at /resume.pdf, so resume links never change. */
-      resumeUrl: z.url().optional(),
+      resumeUrl: url.optional(),
       footer: z.string(),
       socials: z.array(socialSchema),
     }),
