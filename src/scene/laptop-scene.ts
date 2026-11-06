@@ -28,7 +28,8 @@ import {
 } from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { createScreen, type SceneData } from './screen';
+import { DEFAULT_SCREEN, type SceneData } from './code';
+import { createScreen } from './screen';
 import { dustFragment, dustVertex } from './shaders';
 
 // Laptop dimensions in scene units.
@@ -94,7 +95,7 @@ function readSceneData(): SceneData {
   try {
     return JSON.parse(document.getElementById('scene-data')?.textContent ?? '');
   } catch {
-    return { name: '', role: '', skills: [], projects: 0 };
+    return { ...DEFAULT_SCREEN, name: '', role: '', skills: [], projects: 0 };
   }
 }
 

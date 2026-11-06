@@ -240,7 +240,7 @@ export function Editor({ email }: { email?: string }) {
                     </>
                   }
                 />
-                <SectionEditor section={current} index={view.index} site={draft.site} onChange={(s) => updateSection(view.index, s)} />
+                <SectionEditor section={current} index={view.index} content={draft} onChange={(s) => updateSection(view.index, s)} />
               </>
             )}
             {view.kind === 'add' && (
@@ -286,8 +286,8 @@ export function Editor({ email }: { email?: string }) {
   );
 }
 
-function SectionEditor({ section, index, site, onChange }: { section: Section; index: number; site: Site; onChange: (s: Section) => void }) {
-  const props = { path: ['sections', index], site };
+function SectionEditor({ section, index, content, onChange }: { section: Section; index: number; content: Content; onChange: (s: Section) => void }) {
+  const props = { path: ['sections', index], site: content.site, content };
   return (
     <>
       <SectionSettings section={section} onChange={onChange} path={props.path} />

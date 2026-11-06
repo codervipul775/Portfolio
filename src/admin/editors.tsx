@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
-import type { Project, Section, SectionOf, Site } from '../data/schema';
+import type { Content, Project, Section, SectionOf, Site } from '../data/schema';
+import { CODE_COLORS, DEFAULT_SCREEN, codeLines, resolveScreen, type SceneData } from '../scene/code';
 import { newId, slugify } from './content';
 import { IconInput, ImageInput, LinkList, MarkdownInput, markdownHint } from './inputs';
 import { Card, ErrorText, Field, SortableList, TagInput, TextArea, TextInput, Toggle, cx, type Path } from './ui';
@@ -9,6 +10,8 @@ type EditorProps<T extends Section['type']> = {
   onChange: (section: SectionOf<T>) => void;
   path: Path;
   site: Site;
+  /** The whole draft, for editors whose preview depends on other sections. */
+  content: Content;
 };
 
 /** Settings every section has: anchor id, nav label, visibility. */
@@ -28,7 +31,14 @@ export function SectionSettings({ section, onChange, path }: { section: Section;
   );
 }
 
-export function HeroEditor({ section, onChange, path }: EditorProps<'hero'>) {
+type ScreenSettings = NonNullable<SectionOf<'hero'>['screen']>;
+
+export function HeroEditor({ section, onChange, path, content }: EditorProps<'hero'>) {
+  const screen = { ...DEFAULT_SCREEN, ...section.screen };
+  const setScreen = (patch: Partial<ScreenSettings>) => onChange({ ...section, screen: { ...screen, ...patch } });
+  // What each empty field falls back to, shown as placeholders.
+  const auto = resolveScreen({ ...content, sections: content.sections.map((s) => (s === section ? { ...section, screen: undefined } : s)) });
+
   return (
     <>
       <Card title="Intro">
@@ -42,7 +52,68 @@ export function HeroEditor({ section, onChange, path }: EditorProps<'hero'>) {
       <Card title="Buttons">
         <LinkList value={section.ctas} onChange={(ctas) => onChange({ ...section, ctas })} path={[...path, 'ctas']} />
       </Card>
+      <Card title="Laptop screen" description="The code the 3D laptop types. Leave a field empty to fill it in automatically.">
+        <ScreenPreview data={resolveScreen(content)} />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="File name">
+            <TextInput value={screen.fileName} onChange={(fileName) => setScreen({ fileName })} placeholder={DEFAULT_SCREEN.fileName} spellCheck={false} />
+          </Field>
+          <Field label="Comment on the first line" hint="Leave empty to skip the comment line.">
+            <TextInput value={screen.comment} onChange={(comment) => setScreen({ comment })} />
+          </Field>
+          <Field label="Name" hint="Empty: your name from Site settings.">
+            <TextInput value={screen.name} onChange={(v) => setScreen({ name: v || undefined })} placeholder={auto.name} />
+          </Field>
+          <Field label="Role" hint="Empty: the hero title.">
+            <TextInput value={screen.role} onChange={(v) => setScreen({ role: v || undefined })} placeholder={auto.role} />
+          </Field>
+          <Field label="Projects" hint="Empty: counts your visible projects." path={[...path, 'screen', 'projects']}>
+            <TextInput
+              type="number"
+              min={0}
+              value={screen.projects === undefined ? '' : String(screen.projects)}
+              onChange={(v) => setScreen({ projects: v === '' ? undefined : Math.max(0, Math.round(Number(v))) })}
+              placeholder={String(auto.projects)}
+            />
+          </Field>
+          <Field label="Builds…" hint="The last line: developer.build('…')">
+            <TextInput value={screen.buildTarget} onChange={(buildTarget) => setScreen({ buildTarget })} />
+          </Field>
+        </div>
+        <Field label="Skills" group hint={`Empty: your first 3 skills (${auto.skills.join(', ') || 'none yet'}).`}>
+          <TagInput value={screen.skills ?? []} onChange={(skills) => setScreen({ skills: skills.length ? skills : undefined })} placeholder="Type a skill and press Enter" />
+        </Field>
+        <Toggle checked={screen.openToWork} onChange={(openToWork) => setScreen({ openToWork })} label="Open to work" hint="openToWork: true / false" />
+      </Card>
     </>
+  );
+}
+
+/** The laptop's code, as it will be typed on the site. */
+function ScreenPreview({ data }: { data: SceneData }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-line bg-[#0d1117] text-[#c9d1d9]">
+      <div className="flex items-center gap-1.5 bg-[#161b22] px-3 pt-2">
+        {['#ff5f57', '#febc2e', '#28c840'].map((color) => (
+          <span key={color} className="size-2.5 rounded-full" style={{ background: color }} />
+        ))}
+        <span className="ml-3 rounded-t-md bg-[#0d1117] px-3 py-1.5 font-mono text-xs">{data.fileName}</span>
+      </div>
+      <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-6">
+        {codeLines(data).map((line, i) => (
+          <div key={i} className="flex">
+            <span className="w-8 shrink-0 pr-4 text-right text-[#6e7681] select-none">{i + 1}</span>
+            <span>
+              {line.map(([text, color], j) => (
+                <span key={j} style={{ color: CODE_COLORS[color] }}>
+                  {text}
+                </span>
+              ))}
+            </span>
+          </div>
+        ))}
+      </pre>
+    </div>
   );
 }
 
