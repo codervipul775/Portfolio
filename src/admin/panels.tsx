@@ -49,7 +49,7 @@ export function SitePanel({
           <Field label="Your name" path={[...path, 'name']}>
             <TextInput value={site.name} onChange={(name) => onChange({ ...site, name })} />
           </Field>
-          <Field label="Initials" hint="Logo in the nav bar." path={[...path, 'initials']}>
+          <Field label="Initials" hint="Short form of your name; not shown on the site right now." path={[...path, 'initials']}>
             <TextInput value={site.initials} onChange={(initials) => onChange({ ...site, initials })} maxLength={3} />
           </Field>
         </div>

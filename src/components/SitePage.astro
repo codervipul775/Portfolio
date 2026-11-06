@@ -3,6 +3,7 @@
 // (published content) and by /preview (the admin's draft).
 import Base from '../layouts/Base.astro';
 import Footer from './Footer.astro';
+import Intro from './Intro.astro';
 import Nav from './Nav.astro';
 import About from './sections/About.astro';
 import Contact from './sections/Contact.astro';
@@ -43,14 +44,27 @@ const numbered = sections.map((section) => ({
   label: section.navLabel ?? defaultLabels[section.type],
 }));
 const afterHero = sections[sections.findIndex((s) => s.type === 'hero') + 1];
+
+// What the 3D laptop's screen types out (see scene/screen.ts).
+const hero = sections.find((s) => s.type === 'hero');
+const sceneData = {
+  name: site.name,
+  role: hero ? hero.title.split('\n').join(' ') : '',
+  skills: sections.flatMap((s) => (s.type === 'skills' ? s.categories.flatMap((c) => c.skills.map((k) => k.name)) : [])).slice(0, 3),
+  projects: sections.flatMap((s) => (s.type === 'projects' ? s.projects.filter((p) => p.visible) : [])).length,
+};
+// Escape "<" so content can never close the script tag early.
+const sceneJson = JSON.stringify(sceneData).replace(/</g, '\\u003c');
 ---
 
-<Base title={site.seo.title} description={site.seo.description} ogImage={site.seo.ogImage?.url} noindex={preview}>
+<Base title={site.seo.title} description={site.seo.description} ogImage={site.seo.ogImage?.url} noindex={preview} intro>
   <a href="#main" class="btn btn-primary fixed top-4 left-4 z-[60] -translate-y-24 focus:translate-y-0">Skip to content</a>
   <div class="scene-poster" aria-hidden="true"></div>
   <canvas id="scene-canvas" class="scene-canvas" aria-hidden="true"></canvas>
+  <script is:inline type="application/json" id="scene-data" set:html={sceneJson} />
   <div class="grain" aria-hidden="true"></div>
   <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <Intro name={site.name} />
   <Nav site={site} sections={sections} />
 
   <main id="main">
@@ -92,5 +106,6 @@ const afterHero = sections[sections.findIndex((s) => s.type === 'hero') + 1];
   import '../scripts/ui';
   import '../scripts/motion';
   import '../scripts/skill-sphere';
+  import '../scripts/dotted-image';
   import '../scripts/scene-loader';
 </script>

@@ -8,9 +8,11 @@ interface Props {
   description: string;
   ogImage?: string;
   noindex?: boolean;
+  /** Play the opening name animation (see components/Intro.astro). */
+  intro?: boolean;
 }
 
-const { title, description, ogImage, noindex = false } = Astro.props;
+const { title, description, ogImage, noindex = false, intro = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -40,6 +42,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
       } catch {}
     </script>
+    {
+      intro && (
+        <script is:inline>
+          // Decide on the intro before first paint, so the page never flashes without it.
+          // Skipped for reduced motion and for links straight to a section.
+          if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !location.hash) {
+            const root = document.documentElement;
+            root.classList.add('has-intro');
+            history.scrollRestoration = 'manual';
+            // Never leave the page hidden if the animation script fails to load.
+            setTimeout(() => root.classList.add('intro-landing', 'intro-done'), 7000);
+          }
+        </script>
+      )
+    }
   </head>
   <body>
     <slot />

@@ -12,11 +12,11 @@ const links = sections.flatMap((s) => (s.navLabel ? [{ href: `#${s.id}`, label: 
 const homeHref = `#${sections.find((s) => s.type === 'hero')?.id ?? 'main'}`;
 ---
 
-<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6">
+<header class="site-header fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6">
   <nav aria-label="Main" class="nav-bar mx-auto flex max-w-[44rem] items-center gap-1 rounded-full p-1.5">
-    <a href={homeHref} class="grid size-9 place-items-center rounded-full text-sm font-bold">
-      <span class="text-gradient">{site.initials}</span>
-      <span class="sr-only">, {site.name}, back to top</span>
+    <a href={homeHref} class="flex h-9 shrink-0 items-center rounded-full px-3">
+      <span class="nav-logo-text" data-nav-logo>{site.name}</span>
+      <span class="sr-only">, back to top</span>
     </a>
 
     <ul class="mx-auto hidden items-center gap-1 md:flex">
