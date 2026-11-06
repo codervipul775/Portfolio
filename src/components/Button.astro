@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+import { isExternal, linkAttrs } from '../lib/links';
+import type { Link } from '../data/schema';
+
+interface Props {
+  link: Link;
+  size?: 'md' | 'sm';
+  class?: string;
+}
+
+const { link, size = 'md', class: className } = Astro.props;
+// External links without their own icon get an arrow so it's clear they leave the site.
+const icon = link.icon ?? (isExternal(link.href) ? 'lucide:arrow-up-right' : undefined);
+---
+
+<a
+  href={link.href}
+  {...linkAttrs(link.href)}
+  data-magnetic
+  class:list={['btn', link.variant === 'primary' ? 'btn-primary' : 'btn-secondary', size === 'sm' && 'btn-sm', className]}
+>
+  {link.label}
+  <Icon name={icon} />
+</a>

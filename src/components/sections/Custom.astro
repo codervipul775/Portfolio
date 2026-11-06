@@ -1,0 +1,40 @@
+---
+import Button from '../Button.astro';
+import Markdown from '../Markdown.astro';
+import SectionHeader from '../SectionHeader.astro';
+import SiteImage from '../SiteImage.astro';
+import type { SectionOf } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'custom'>;
+  index: number;
+  label: string;
+}
+
+const { section, index, label } = Astro.props;
+---
+
+<section id={section.id} data-scene="custom" class="section-pad">
+  <div class:list={['container-site', section.image && 'grid items-center gap-12 lg:grid-cols-2 lg:gap-16']}>
+    <div>
+      <SectionHeader index={index} label={label} heading={section.heading} />
+      <div data-reveal style="--delay: 80ms">
+        <Markdown source={section.body} class="max-w-3xl text-lg leading-relaxed text-muted" />
+      </div>
+      {
+        section.links.length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-3" data-reveal style="--delay: 160ms">
+            {section.links.map((link) => <Button link={link} />)}
+          </div>
+        )
+      }
+    </div>
+    {
+      section.image && (
+        <div class="overflow-hidden rounded-[1.75rem] border border-line" data-reveal>
+          <SiteImage image={section.image} widths={[480, 720, 960, 1280]} sizes="(min-width: 1024px) 50vw, 100vw" class="w-full" />
+        </div>
+      )
+    }
+  </div>
+</section>

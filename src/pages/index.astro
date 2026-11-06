@@ -1,0 +1,8 @@
+---
+import SitePage from '../components/SitePage.astro';
+import { getContent } from '../data/load';
+
+const content = await getContent();
+---
+
+<SitePage content={content} />

@@ -1,0 +1,45 @@
+---
+// Renders the admin's unsaved draft with the real site components. The admin
+// posts the draft here together with their session token, which is checked first.
+import Base from '../layouts/Base.astro';
+import SitePage from '../components/SitePage.astro';
+import { contentSchema, type Content } from '../data/schema';
+import { isAdmin } from '../lib/supabase-server';
+
+export const prerender = false;
+
+let content: Content | undefined;
+let problem = 'Open the preview from the admin panel.';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const token = String(form.get('token') ?? '');
+  if (!token || !(await isAdmin(token))) {
+    problem = 'Your admin session has expired. Sign in again, then preview.';
+  } else {
+    let data: unknown = null;
+    try {
+      data = JSON.parse(String(form.get('content') ?? 'null'));
+    } catch {}
+    const parsed = contentSchema.safeParse(data);
+    if (parsed.success) content = parsed.data;
+    else problem = 'The draft has errors. Fix the issues listed in the admin panel first.';
+  }
+}
+if (!content) Astro.response.status = 400;
+---
+
+{
+  content ? (
+    <SitePage content={content} preview />
+  ) : (
+    <Base title="Preview" description="Draft preview" noindex>
+      <main class="grid min-h-svh place-items-center p-6 text-center">
+        <div>
+          <p class="text-lg">{problem}</p>
+          <a href="/admin" class="btn btn-primary mt-6">Go to admin</a>
+        </div>
+      </main>
+    </Base>
+  )
+}

@@ -1,0 +1,63 @@
+---
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import Markdown from '../Markdown.astro';
+import SplitText from '../SplitText.astro';
+import { linkAttrs } from '../../lib/links';
+import type { SectionOf, Site } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'contact'>;
+  site: Site;
+  index: number;
+  label: string;
+}
+
+const { section, site, index, label } = Astro.props;
+---
+
+<section id={section.id} data-scene="contact" class="section-pad">
+  <div class="container-site">
+    <div class="spotlight relative overflow-hidden rounded-[2.5rem] border border-line bg-surface px-6 py-20 text-center sm:px-12 md:py-32">
+      <div class="aurora" aria-hidden="true"><span /><span /><span /></div>
+
+      <div class="relative">
+        <p class="eyebrow mb-6 flex items-center justify-center gap-3" data-reveal>
+          <span class="h-px w-8 bg-brand"></span>
+          <span><span class="text-brand">{String(index).padStart(2, '0')}</span> / {label}</span>
+          <span class="h-px w-8 bg-brand"></span>
+        </p>
+        <h2 class="heading-display mx-auto max-w-4xl" data-split>
+          <span class="sr-only">{section.heading}</span>
+          <span aria-hidden="true"><SplitText text={section.heading} /></span>
+        </h2>
+
+        <div data-reveal>
+          <Markdown source={section.body} class="mx-auto mt-8 max-w-xl text-lg text-muted md:text-xl" />
+        </div>
+
+        {
+          section.ctas.length > 0 && (
+            <div class="mt-10 flex flex-wrap justify-center gap-3" data-reveal>
+              {section.ctas.map((cta) => <Button link={cta} />)}
+            </div>
+          )
+        }
+
+        {
+          section.showSocials && site.socials.length > 0 && (
+            <ul class="mt-12 flex flex-wrap justify-center gap-3" data-reveal>
+              {site.socials.map((social) => (
+                <li>
+                  <a href={social.href} {...linkAttrs(social.href)} class="social" aria-label={social.label} title={social.label} data-magnetic>
+                    <Icon name={social.icon} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

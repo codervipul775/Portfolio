@@ -1,0 +1,86 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeader from '../SectionHeader.astro';
+import type { SectionOf } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'skills'>;
+  index: number;
+  label: string;
+}
+
+const { section, index, label } = Astro.props;
+const all = section.categories.flatMap((category, ci) =>
+  category.skills.map((skill) => ({ ...skill, key: `${category.id}/${skill.id}`, categoryId: category.id, color: `var(--cat-${ci % 4})` })),
+);
+const names = all.map((skill) => skill.name);
+const rows = [names, [...names].reverse()];
+---
+
+<section id={section.id} data-scene="skills" class="section-pad overflow-x-clip">
+  <div class="container-site">
+    <SectionHeader index={index} label={label} heading={section.heading} />
+  </div>
+
+  <div class="marquee-band" aria-hidden="true">
+    {
+      rows.map((row, r) => (
+        <div class="marquee-row" data-marquee>
+          <div class:list={['marquee-track', r === 1 && 'is-reverse']}>
+            {[0, 1].map(() => (
+              <div class="marquee-group">
+                {row.map((name, i) => (
+                  <Fragment>
+                    <span class:list={['marquee-item', (i + r) % 2 === 1 && 'is-outline']}>{name}</span>
+                    <span class="marquee-sep">✦</span>
+                  </Fragment>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="container-site grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
+    <div class="space-y-9">
+      {
+        section.categories.map((category, ci) => (
+          <div data-category-id={category.id} style={`--cat: var(--cat-${ci % 4})`} data-reveal>
+            <div class="mb-4 flex items-center gap-3">
+              <span class="size-2.5 rounded-full bg-(--cat) shadow-[0_0_12px_var(--cat)]" />
+              <h3 class="text-lg font-semibold">{category.name}</h3>
+              <span class="eyebrow">{String(category.skills.length).padStart(2, '0')}</span>
+            </div>
+            <ul class="flex flex-wrap gap-2">
+              {category.skills.map((skill) => (
+                <li class:list={['skill', skill.highlight && 'skill-highlight']} data-skill-id={`${category.id}/${skill.id}`}>
+                  <Icon name={skill.icon} />
+                  {skill.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="order-first lg:order-none" data-reveal>
+      <div class="skill-sphere" data-skill-sphere aria-hidden="true">
+        <div class="sphere-glow" />
+        <div class="sphere-orbit" style="--tilt: 72deg; --speed: 26s"><span /></div>
+        <div class="sphere-orbit" style="--tilt: 64deg; --speed: 38s; --twist: 55deg"><span /></div>
+        {
+          all.map((skill) => (
+            <span class="sphere-item" data-sphere-item data-skill-id={skill.key} data-category-id={skill.categoryId} style={`--cat: ${skill.color}`}>
+              <Icon name={skill.icon} />
+              {skill.name}
+            </span>
+          ))
+        }
+      </div>
+      <p class="eyebrow mt-4 text-center">Drag to spin</p>
+    </div>
+  </div>
+</section>

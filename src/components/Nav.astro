@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+import type { Section, Site } from '../data/schema';
+
+interface Props {
+  site: Site;
+  sections: Section[];
+}
+
+const { site, sections } = Astro.props;
+const links = sections.flatMap((s) => (s.navLabel ? [{ href: `#${s.id}`, label: s.navLabel }] : []));
+const homeHref = `#${sections.find((s) => s.type === 'hero')?.id ?? 'main'}`;
+---
+
+<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6">
+  <nav aria-label="Main" class="nav-bar mx-auto flex max-w-[44rem] items-center gap-1 rounded-full p-1.5">
+    <a href={homeHref} class="grid size-9 place-items-center rounded-full text-sm font-bold">
+      <span class="text-gradient">{site.initials}</span>
+      <span class="sr-only">, {site.name}, back to top</span>
+    </a>
+
+    <ul class="mx-auto hidden items-center gap-1 md:flex">
+      {links.map((link) => (
+        <li><a href={link.href} class="nav-link" data-nav-link>{link.label}</a></li>
+      ))}
+    </ul>
+
+    <div class="ml-auto flex items-center gap-1 md:ml-0">
+      {site.resumeUrl && (
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm mr-1 hidden sm:inline-flex">
+          Resume
+        </a>
+      )}
+      <button type="button" class="icon-btn" aria-label="Toggle colour theme" data-theme-toggle>
+        <Icon name="lucide:moon" class="theme-icon-dark" />
+        <Icon name="lucide:sun" class="theme-icon-light" />
+      </button>
+      <button type="button" class="icon-btn md:hidden" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-button>
+        <Icon name="lucide:menu" class="menu-icon-open" />
+        <Icon name="lucide:x" class="menu-icon-close" />
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="nav-bar mx-auto mt-2 max-w-[44rem] rounded-3xl bg-surface-strong p-2 md:hidden" hidden>
+    <ul>
+      {links.map((link) => (
+        <li><a href={link.href} class="nav-link px-4 py-3 text-lg" data-nav-link>{link.label}</a></li>
+      ))}
+      {site.resumeUrl && (
+        <li><a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="nav-link px-4 py-3 text-lg">Resume</a></li>
+      )}
+    </ul>
+  </div>
+</header>

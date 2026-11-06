@@ -1,0 +1,96 @@
+---
+// The whole public page for a given content document. Used by the homepage
+// (published content) and by /preview (the admin's draft).
+import Base from '../layouts/Base.astro';
+import Footer from './Footer.astro';
+import Nav from './Nav.astro';
+import About from './sections/About.astro';
+import Contact from './sections/Contact.astro';
+import Custom from './sections/Custom.astro';
+import Hero from './sections/Hero.astro';
+import Projects from './sections/Projects.astro';
+import Skills from './sections/Skills.astro';
+import Status from './sections/Status.astro';
+import type { Content, Section } from '../data/schema';
+
+interface Props {
+  content: Content;
+  /** Draft preview: not indexed, and labelled as a preview. */
+  preview?: boolean;
+}
+
+const { content, preview = false } = Astro.props;
+const { site } = content;
+const sections = content.sections.filter((s) => s.visible);
+
+// Eyebrow label ("02 / Skills") when the admin hasn't given the section a nav label.
+const defaultLabels: Record<Section['type'], string> = {
+  hero: '',
+  about: 'About',
+  status: 'Now',
+  skills: 'Skills',
+  projects: 'Projects',
+  contact: 'Contact',
+  custom: 'More',
+};
+
+// Hero and heading-less status sections have no "01 /" header, so they don't take a number.
+const hasHeader = (s: Section) => s.type !== 'hero' && !(s.type === 'status' && !s.heading);
+let count = 0;
+const numbered = sections.map((section) => ({
+  section,
+  index: hasHeader(section) ? ++count : undefined,
+  label: section.navLabel ?? defaultLabels[section.type],
+}));
+const afterHero = sections[sections.findIndex((s) => s.type === 'hero') + 1];
+---
+
+<Base title={site.seo.title} description={site.seo.description} ogImage={site.seo.ogImage?.url} noindex={preview}>
+  <a href="#main" class="btn btn-primary fixed top-4 left-4 z-[60] -translate-y-24 focus:translate-y-0">Skip to content</a>
+  <div class="scene-poster" aria-hidden="true"></div>
+  <canvas id="scene-canvas" class="scene-canvas" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <Nav site={site} sections={sections} />
+
+  <main id="main">
+    {
+      numbered.map(({ section, index = 0, label }) => {
+        switch (section.type) {
+          case 'hero':
+            return <Hero section={section} site={site} nextHref={afterHero && `#${afterHero.id}`} />;
+          case 'about':
+            return <About section={section} index={index} label={label} />;
+          case 'status':
+            return <Status section={section} site={site} index={index || undefined} label={label} />;
+          case 'skills':
+            return <Skills section={section} index={index} label={label} />;
+          case 'projects':
+            return <Projects section={section} index={index} label={label} />;
+          case 'contact':
+            return <Contact section={section} site={site} index={index} label={label} />;
+          case 'custom':
+            return <Custom section={section} index={index} label={label} />;
+        }
+      })
+    }
+  </main>
+
+  <Footer site={site} />
+
+  {
+    preview && (
+      <div class="nav-bar fixed bottom-4 left-1/2 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-full px-4 py-2 text-sm">
+        <span class="size-2 animate-pulse rounded-full bg-amber-400" />
+        Draft preview, not published yet
+      </div>
+    )
+  }
+</Base>
+
+<script>
+  import '../scripts/ui';
+  import '../scripts/motion';
+  import '../scripts/skill-sphere';
+  import '../scripts/scene-loader';
+</script>

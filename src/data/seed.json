@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "site": {
+    "name": "Vipul Yadav",
+    "initials": "VY",
+    "seo": {
+      "title": "Vipul Yadav | Creative Developer",
+      "description": "Portfolio of Vipul Yadav, a creative full-stack developer and AI enthusiast. Explore modern web experiences."
+    },
+    "resumeUrl": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/8hng6l",
+    "footer": "Designed for the Future.",
+    "socials": [
+      { "id": "github", "label": "GitHub", "href": "https://github.com/codervipul775", "icon": "simple-icons:github" },
+      { "id": "linkedin", "label": "LinkedIn", "href": "https://linkedin.com/in/vipul-yadav-b0a82231a", "icon": "simple-icons:linkedin" },
+      { "id": "leetcode", "label": "LeetCode", "href": "https://leetcode.com/u/codervipul/", "icon": "simple-icons:leetcode" },
+      { "id": "codeforces", "label": "Codeforces", "href": "https://codeforces.com/profile/codervipul", "icon": "simple-icons:codeforces" },
+      { "id": "instagram", "label": "Instagram", "href": "https://www.instagram.com/vipul_270805", "icon": "simple-icons:instagram" },
+      { "id": "email", "label": "Email", "href": "mailto:ydvvipul2005@gmail.com", "icon": "lucide:mail" },
+      { "id": "phone", "label": "Phone", "href": "tel:+919306800653", "icon": "lucide:phone" }
+    ]
+  },
+  "sections": [
+    {
+      "id": "home",
+      "type": "hero",
+      "visible": true,
+      "title": "Creative\nDeveloper",
+      "avatar": {
+        "url": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/axky3j",
+        "alt": "Vipul Yadav",
+        "width": 1024,
+        "height": 1024
+      },
+      "ctas": [
+        { "label": "Explore My Works", "href": "#projects", "icon": "lucide:arrow-right", "variant": "primary" },
+        { "label": "View Resume", "href": "/resume.pdf", "icon": "lucide:file-text", "variant": "secondary" },
+        { "label": "Say Hello", "href": "#contact", "icon": "lucide:send", "variant": "secondary" }
+      ]
+    },
+    {
+      "id": "about",
+      "type": "about",
+      "visible": true,
+      "navLabel": "About",
+      "heading": "Know Who I Am",
+      "body": "Hi Everyone, I am **Vipul Yadav** from **Rewari, Haryana**.\n\nI am currently a student at Newton School of Technology, Pune.\n\nI am pursuing my degree in Computer Science and Engineering with a specialization in Artificial Intelligence and Machine Learning.",
+      "portrait": {
+        "url": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/8pscko",
+        "alt": "Portrait of Vipul Yadav",
+        "width": 900,
+        "height": 1198
+      },
+      "interestsHeading": "Apart from coding, I love to:",
+      "interests": [
+        { "id": "games", "label": "Playing Games", "icon": "lucide:gamepad-2" },
+        { "id": "movies", "label": "Watching Movies", "icon": "lucide:film" },
+        { "id": "travel", "label": "Travelling", "icon": "lucide:plane" }
+      ],
+      "quote": { "text": "The only way to do great work is to love what you do.", "author": "Vipul" }
+    },
+    {
+      "id": "now",
+      "type": "status",
+      "visible": true,
+      "cards": [
+        {
+          "id": "live-status",
+          "title": "Live Status",
+          "icon": "lucide:satellite-dish",
+          "accent": "#bf36ff",
+          "body": "**Currently:** Part-time AI Researcher & Web Architect.\n\nExploring Neural Networks and Agentic RAG workflows.",
+          "chips": [],
+          "socialIds": []
+        },
+        {
+          "id": "learning-stack",
+          "title": "Learning Stack",
+          "icon": "lucide:zap",
+          "accent": "#00f3ff",
+          "body": "",
+          "chips": ["FastAPI", "Java"],
+          "socialIds": []
+        },
+        {
+          "id": "dsa",
+          "title": "Problem Solving & DSA",
+          "icon": "lucide:brain",
+          "accent": "#ff9f40",
+          "body": "System Design, Advanced Data Structures & Algorithms.",
+          "chips": [],
+          "socialIds": ["leetcode", "codeforces"]
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "type": "skills",
+      "visible": true,
+      "heading": "Professional Skillset",
+      "categories": [
+        {
+          "id": "ai-ml",
+          "name": "AI, ML & Data Science",
+          "skills": [
+            { "id": "ai-ml", "name": "AI & ML", "icon": "lucide:brain", "highlight": true },
+            { "id": "agentic-ai", "name": "Agentic AI", "icon": "lucide:bot", "highlight": false },
+            { "id": "neural-networks", "name": "Neural Networks", "icon": "lucide:network", "highlight": false },
+            { "id": "rag", "name": "RAG", "icon": "lucide:workflow", "highlight": false },
+            { "id": "regression", "name": "Regression & Class.", "icon": "lucide:chart-column", "highlight": false },
+            { "id": "pandas-numpy", "name": "Pandas & NumPy", "icon": "simple-icons:pandas", "highlight": false },
+            { "id": "scikit-learn", "name": "Scikit-Learn", "icon": "simple-icons:scikitlearn", "highlight": false },
+            { "id": "preprocessing", "name": "Data Preprocessing", "icon": "lucide:funnel", "highlight": false },
+            { "id": "analytics", "name": "Data Analytics", "icon": "lucide:chart-line", "highlight": false },
+            { "id": "excel", "name": "Excel/Data", "icon": "lucide:sheet", "highlight": false }
+          ]
+        },
+        {
+          "id": "frontend",
+          "name": "Frontend & Languages",
+          "skills": [
+            { "id": "react", "name": "React.js", "icon": "simple-icons:react", "highlight": false },
+            { "id": "nextjs", "name": "Next.js", "icon": "simple-icons:nextdotjs", "highlight": false },
+            { "id": "javascript", "name": "JavaScript", "icon": "simple-icons:javascript", "highlight": false },
+            { "id": "typescript", "name": "TypeScript", "icon": "simple-icons:typescript", "highlight": false },
+            { "id": "python", "name": "Python", "icon": "simple-icons:python", "highlight": false },
+            { "id": "html-css", "name": "HTML/CSS", "icon": "simple-icons:html5", "highlight": false },
+            { "id": "tailwind", "name": "Tailwind CSS", "icon": "simple-icons:tailwindcss", "highlight": false },
+            { "id": "threejs", "name": "Three.js", "icon": "simple-icons:threedotjs", "highlight": false }
+          ]
+        },
+        {
+          "id": "backend",
+          "name": "Backend, Architecture & Tools",
+          "skills": [
+            { "id": "node-express", "name": "Node/Express.js", "icon": "simple-icons:nodedotjs", "highlight": false },
+            { "id": "system-design", "name": "System Design", "icon": "lucide:blocks", "highlight": false },
+            { "id": "mongodb", "name": "MongoDB", "icon": "simple-icons:mongodb", "highlight": false },
+            { "id": "postgresql", "name": "PostgreSQL", "icon": "simple-icons:postgresql", "highlight": false },
+            { "id": "mysql", "name": "MySQL", "icon": "simple-icons:mysql", "highlight": false },
+            { "id": "supabase", "name": "Supabase", "icon": "simple-icons:supabase", "highlight": false },
+            { "id": "firebase", "name": "Firebase", "icon": "simple-icons:firebase", "highlight": false },
+            { "id": "prisma", "name": "Prisma ORM", "icon": "simple-icons:prisma", "highlight": false },
+            { "id": "docker", "name": "Docker", "icon": "simple-icons:docker", "highlight": false },
+            { "id": "tableau", "name": "Tableau", "icon": "simple-icons:tableau", "highlight": false }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "type": "projects",
+      "visible": true,
+      "navLabel": "Works",
+      "heading": "Works",
+      "moreHeading": "Other Noteworthy Projects",
+      "cta": { "label": "Explore More on GitHub", "href": "https://github.com/codervipul775", "icon": "simple-icons:github", "variant": "secondary" },
+      "projects": [
+        {
+          "id": "voice-neural",
+          "title": "VOICE NEURAL",
+          "description": "Voice Neural is a cutting-edge AI-powered voice agent that takes your question and replies back in AI voice.",
+          "image": {
+            "url": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/830usn",
+            "alt": "Screenshot of Voice Neural",
+            "width": 3024,
+            "height": 1728
+          },
+          "tags": ["Next.js", "FastAPI", "Deepgram", "Redis", "Python"],
+          "links": [
+            { "label": "Live Demo", "href": "https://voice-agent-theta-six.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/Voice-Agent", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": true,
+          "visible": true
+        },
+        {
+          "id": "safar",
+          "title": "Safar",
+          "description": "An offline-first platform featuring dedicated workspaces for coding and documentation. It automatically saves your work locally and syncs seamlessly once internet connectivity is restored.",
+          "image": {
+            "url": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/aoneax",
+            "alt": "Screenshot of the Safar workspace",
+            "width": 3022,
+            "height": 1716
+          },
+          "tags": ["React.js", "Tailwind CSS", "TypeScript", "MongoDB"],
+          "links": [
+            { "label": "Live Demo", "href": "https://safar-peach.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/Safar", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": true,
+          "visible": true
+        },
+        {
+          "id": "visual-product-comparison",
+          "title": "Visual Product Comparison Engine",
+          "description": "A fully offline, on-device Visual Product Comparison Engine for fashion e-commerce built during a 24-hour hackathon.",
+          "image": {
+            "url": "https://iziltkracfdoszyngmmd.supabase.co/storage/v1/object/public/dropbox/files/hqvbhw",
+            "alt": "Screenshot of the Visual Product Comparison Engine",
+            "width": 3024,
+            "height": 1894
+          },
+          "tags": ["TypeScript", "Deep Learning", "Vector Search", "ResNet 50", "HNSWLib", "Electron", "Python"],
+          "links": [
+            { "label": "Download App", "href": "https://github.com/Yashsingh045/Visual-Product-Comparison-Engine/releases", "icon": "lucide:download", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/Visual-Product-Comparison-Engine", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": true,
+          "visible": true
+        },
+        {
+          "id": "nextflow",
+          "title": "NextFlow",
+          "description": "A seamless workflow builder and automation tool.",
+          "tags": ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "Trigger.dev"],
+          "links": [
+            { "label": "Live Demo", "href": "https://next-flow-blush.vercel.app", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/NextFlow", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "notenest",
+          "title": "NoteNest",
+          "description": "Notes sharing platform integrated with intelligent AI summaries and search features.",
+          "tags": ["React.js", "Node.js", "MongoDB"],
+          "links": [
+            { "label": "Live Demo", "href": "https://notes-shaaring-platform.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/nst-sdc/NotesShaaring-Platform", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "cloud-haven",
+          "title": "Cloud Haven",
+          "description": "A secure platform for file storage and sharing, built for modern distributed teams.",
+          "tags": ["React.js", "Supabase"],
+          "links": [
+            { "label": "Live Demo", "href": "https://drop-box1.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/DropBox1", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "solar-forecasting",
+          "title": "Solar Energy Forecasting",
+          "description": "Intelligent AI system for forecasting solar grid optimization.",
+          "tags": ["Python", "Streamlit", "AI/ML", "Pandas", "Regression"],
+          "links": [
+            { "label": "Live Demo", "href": "https://intelligent-solar-energy-generation-forecasting-78ssbnfr55sf6b.streamlit.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/Intelligent-Solar-Energy-Generation-Forecasting", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "amazon-sales",
+          "title": "Amazon Sales Analysis",
+          "description": "Data analytics dashboard visualizing complex sales data patterns.",
+          "tags": ["Tableau", "Data Analytics", "Pandas"],
+          "links": [
+            { "label": "Dashboard", "href": "https://public.tableau.com/app/profile/vipul.yadav2064/viz/Amazon_Dashboard1/Dashboard1", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/AmazonSalesAnalysis", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "real-estate",
+          "title": "Real Estate",
+          "description": "A comprehensive real estate property listing and management platform.",
+          "tags": ["React.js", "Tailwind CSS", "Express.js", "MongoDB"],
+          "links": [
+            { "label": "Live Demo", "href": "https://real-estate-qebn.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/Real-Estate", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        },
+        {
+          "id": "end2start",
+          "title": "End2Start",
+          "description": "An engaging two-player word game that tests vocabulary and strategic thinking.",
+          "tags": ["React.js", "Game Dev"],
+          "links": [
+            { "label": "Play Now", "href": "https://end2-start-game.vercel.app/", "variant": "primary" },
+            { "label": "Repo", "href": "https://github.com/codervipul775/End2Start---GAME", "icon": "simple-icons:github", "variant": "secondary" }
+          ],
+          "featured": false,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "visible": true,
+      "navLabel": "Contact",
+      "heading": "Let's Build Faster",
+      "body": "Open for internships, freelance projects, and collaborations.",
+      "showSocials": true,
+      "ctas": [
+        { "label": "Start a Chat", "href": "mailto:ydvvipul2005@gmail.com", "icon": "lucide:message-circle", "variant": "primary" },
+        { "label": "Call Now", "href": "tel:+919306800653", "icon": "lucide:phone", "variant": "secondary" }
+      ]
+    }
+  ]
+}
