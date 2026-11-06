@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
+import { playIntro } from './intro';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,6 +28,13 @@ if (!reduceMotion) {
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
+
+  // No scrolling while the name flies in; the scrollbar comes back after, so re-measure.
+  lenis.stop();
+  playIntro(() => {
+    lenis.start();
+    ScrollTrigger.refresh();
+  });
 
   // Headings rise word by word out of a mask (words are split at build time).
   for (const heading of $$('[data-split]')) {

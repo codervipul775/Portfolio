@@ -18,7 +18,7 @@ const starts = lines.map((_, i) => lines.slice(0, i).join('').replace(/\s/g, '')
 const letterCount = lines.join('').replace(/\s/g, '').length;
 ---
 
-<section id={section.id} data-scene="hero" class="relative flex min-h-svh items-center pt-28 pb-28">
+<section id={section.id} data-scene="hero" class="relative flex min-h-svh items-start pt-32 pb-28 md:items-center md:pt-28">
   <div class="container-site" data-hero-content>
     <div class="flex items-center gap-4" data-intro>
       {
@@ -62,7 +62,7 @@ const letterCount = lines.join('').replace(/\s/g, '').length;
     nextHref && (
       <a
         href={nextHref}
-        class="eyebrow absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3"
+        class="eyebrow absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex"
         aria-label="Scroll to next section"
         data-intro
         style={`--delay: ${600 + letterCount * 32}ms`}

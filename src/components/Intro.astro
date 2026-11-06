@@ -1,0 +1,19 @@
+---
+// Opening animation: the name fills the screen, then flies into the nav as the
+// logo (driven by scripts/intro.ts). Only shown when Base adds `has-intro`.
+import SplitText from './SplitText.astro';
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+// Uppercase heavy Sora runs about 0.68em per character, so this fills ~92% of the width.
+const fontSize = `min(${(92 / (name.length * 0.68)).toFixed(2)}vw, 16rem)`;
+---
+
+<div class="intro-overlay" data-intro-overlay aria-hidden="true">
+  <div class="intro-name" data-intro-name style={`font-size: ${fontSize}`}>
+    <SplitText text={name} letters />
+  </div>
+</div>

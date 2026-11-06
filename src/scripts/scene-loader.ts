@@ -6,7 +6,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
 
 if (canvas && !reduceMotion && !saveData) {
-  const start = () => import('../scene/neural-scene').then(({ startScene }) => startScene(canvas));
+  const start = () => import('../scene/laptop-scene').then(({ startScene }) => startScene(canvas));
   const whenIdle = () =>
     'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 200);
   if (document.readyState === 'complete') whenIdle();
