@@ -56,6 +56,19 @@ export const heroSectionSchema = z.object({
   title: z.string(),
   avatar: imageSchema.optional(),
   ctas: z.array(linkSchema),
+  /** What the 3D laptop types. Empty fields fall back to the rest of the content (see scene/code.ts). */
+  screen: z
+    .object({
+      fileName: z.string().default('developer.ts'),
+      comment: z.string().default('hello, world'),
+      name: z.string().optional(),
+      role: z.string().optional(),
+      skills: z.array(z.string()).optional(),
+      projects: z.number().int().min(0, 'Must be 0 or more').optional(),
+      openToWork: z.boolean().default(true),
+      buildTarget: z.string().default('the future'),
+    })
+    .optional(),
 });
 
 export const aboutSectionSchema = z.object({

@@ -13,6 +13,7 @@ import Projects from './sections/Projects.astro';
 import Skills from './sections/Skills.astro';
 import Status from './sections/Status.astro';
 import type { Content, Section } from '../data/schema';
+import { resolveScreen } from '../scene/code';
 
 interface Props {
   content: Content;
@@ -45,14 +46,8 @@ const numbered = sections.map((section) => ({
 }));
 const afterHero = sections[sections.findIndex((s) => s.type === 'hero') + 1];
 
-// What the 3D laptop's screen types out (see scene/screen.ts).
-const hero = sections.find((s) => s.type === 'hero');
-const sceneData = {
-  name: site.name,
-  role: hero ? hero.title.split('\n').join(' ') : '',
-  skills: sections.flatMap((s) => (s.type === 'skills' ? s.categories.flatMap((c) => c.skills.map((k) => k.name)) : [])).slice(0, 3),
-  projects: sections.flatMap((s) => (s.type === 'projects' ? s.projects.filter((p) => p.visible) : [])).length,
-};
+// What the 3D laptop's screen types out (see scene/code.ts).
+const sceneData = resolveScreen(content);
 // Escape "<" so content can never close the script tag early.
 const sceneJson = JSON.stringify(sceneData).replace(/</g, '\\u003c');
 ---

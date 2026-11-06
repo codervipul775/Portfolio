@@ -1,43 +1,14 @@
 import { CanvasTexture, SRGBColorSpace } from 'three';
 
-/** Content for the screen, written into the page by SitePage.astro. */
-export type SceneData = { name: string; role: string; skills: string[]; projects: number };
+import { CODE_COLORS, codeLines, type SceneData } from './code';
 
 const COLORS = {
+  ...CODE_COLORS,
   bg: '#0d1117',
   bar: '#161b22',
-  activeLine: '#161b22',
-  text: '#c9d1d9',
   faint: '#6e7681',
-  keyword: '#ff7b72',
-  string: '#a5d6ff',
-  prop: '#79c0ff',
-  fn: '#d2a8ff',
-  number: '#79c0ff',
-  bool: '#ffa657',
-  comment: '#8b949e',
   cursor: '#2bb8f2',
 };
-
-type Token = [text: string, color: keyof typeof COLORS];
-
-const quote = (s: string) => `'${s.replace(/'/g, "\\'")}'`;
-
-function codeLines({ name, role, skills, projects }: SceneData): Token[][] {
-  const skillTokens = skills.flatMap((skill, i): Token[] => [[quote(skill), 'string'], ...(i < skills.length - 1 ? ([[', ', 'text']] as Token[]) : [])]);
-  return [
-    [['// hello, world', 'comment']],
-    [['const ', 'keyword'], ['developer', 'prop'], [' = {', 'text']],
-    [['  name', 'prop'], [': ', 'text'], [quote(name), 'string'], [',', 'text']],
-    [['  role', 'prop'], [': ', 'text'], [quote(role), 'string'], [',', 'text']],
-    [['  skills', 'prop'], [': [', 'text'], ...skillTokens, ['],', 'text']],
-    [['  projects', 'prop'], [': ', 'text'], [String(projects), 'number'], [',', 'text']],
-    [['  openToWork', 'prop'], [': ', 'text'], ['true', 'bool'], [',', 'text']],
-    [['};', 'text']],
-    [],
-    [['developer', 'prop'], ['.', 'text'], ['build', 'fn'], ['(', 'text'], ["'the future'", 'string'], [');', 'text']],
-  ];
-}
 
 const FONT = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
@@ -72,11 +43,12 @@ export function createScreen(data: SceneData) {
     });
     ctx.fillStyle = COLORS.bg;
     ctx.beginPath();
-    ctx.roundRect(120, 12, 210, 44, [10, 10, 0, 0]);
+    ctx.font = `500 21px ${FONT}`;
+    ctx.roundRect(120, 12, Math.max(210, ctx.measureText(data.fileName).width + 52), 44, [10, 10, 0, 0]);
     ctx.fill();
     ctx.font = `500 21px ${FONT}`;
     ctx.fillStyle = COLORS.text;
-    ctx.fillText('developer.ts', 146, 41);
+    ctx.fillText(data.fileName, 146, 41);
 
     // Code, line by line, cut off at the typing position.
     const lineHeight = 46;
