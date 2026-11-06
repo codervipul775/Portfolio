@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/sora';
+import soraLatin from '@fontsource-variable/sora/files/sora-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 
 interface Props {
@@ -22,6 +23,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={soraLatin} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#05060a" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:type" content="website" />
@@ -38,7 +41,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       } catch {}
     </script>
   </head>
-  <body class="bg-neutral-950 font-sans text-neutral-100 antialiased">
+  <body>
     <slot />
   </body>
 </html>

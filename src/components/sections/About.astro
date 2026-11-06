@@ -1,0 +1,72 @@
+---
+import Icon from '../Icon.astro';
+import Markdown from '../Markdown.astro';
+import SectionHeader from '../SectionHeader.astro';
+import SiteImage from '../SiteImage.astro';
+import type { SectionOf } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'about'>;
+  index: number;
+  label: string;
+}
+
+const { section, index, label } = Astro.props;
+---
+
+<section id={section.id} data-scene="about" class="section-pad">
+  <div class="container-site grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
+    {
+      section.portrait && (
+        <div class="mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-none" data-reveal>
+          <div class="glow-ring rounded-[2rem]" data-tilt="7">
+            <div class="relative overflow-hidden rounded-[calc(2rem-2px)] bg-surface-strong">
+              <SiteImage
+                image={section.portrait}
+                widths={[360, 540, 720, 960]}
+                sizes="(min-width: 1024px) 38vw, min(24rem, calc(100vw - 2rem))"
+                class="aspect-[4/5] w-full object-cover object-top"
+              />
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-bg/70 to-transparent" />
+              <div class="tilt-glare" />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    <div class:list={[section.portrait ? 'lg:col-span-7' : 'lg:col-span-12']}>
+      <SectionHeader index={index} label={label} heading={section.heading} />
+
+      <div data-reveal>
+        <Markdown source={section.body} class="text-lg leading-relaxed text-muted md:text-xl" />
+      </div>
+
+      {
+        section.interests.length > 0 && (
+          <div class="mt-10" data-reveal>
+            {section.interestsHeading && <h3 class="eyebrow mb-4">{section.interestsHeading}</h3>}
+            <ul class="flex flex-wrap gap-2.5">
+              {section.interests.map((interest) => (
+                <li class="skill spotlight" data-magnetic>
+                  <Icon name={interest.icon} />
+                  {interest.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        section.quote && (
+          <figure class="relative mt-12 pl-8" data-reveal>
+            <span class="text-gradient absolute -top-6 left-0 font-serif text-7xl leading-none" aria-hidden="true">“</span>
+            <blockquote class="text-xl leading-snug font-medium text-balance md:text-2xl">{section.quote.text}</blockquote>
+            <figcaption class="eyebrow mt-3">— {section.quote.author}</figcaption>
+          </figure>
+        )
+      }
+    </div>
+  </div>
+</section>

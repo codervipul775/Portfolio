@@ -1,0 +1,21 @@
+---
+import type { Site } from '../data/schema';
+
+interface Props {
+  site: Site;
+}
+
+const { site } = Astro.props;
+---
+
+<footer class="relative overflow-hidden">
+  <div class="container-site">
+    <div class="flex flex-col items-center justify-between gap-4 border-t border-line py-10 text-sm text-faint sm:flex-row">
+      <p>© {new Date().getFullYear()} {site.name}. {site.footer}</p>
+      <a href="#main" class="eyebrow transition-colors hover:text-fg">Back to top ↑</a>
+    </div>
+  </div>
+  <div class="giant-name" data-giant-name aria-hidden="true">
+    {[...site.name].map((char) => <span>{char === ' ' ? ' ' : char}</span>)}
+  </div>
+</footer>

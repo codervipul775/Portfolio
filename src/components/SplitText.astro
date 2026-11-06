@@ -1,0 +1,44 @@
+---
+// Splits text into masked words (or letters) at build time, so headings can animate
+// in without JavaScript measuring layout and without a flash of unsplit text.
+// Wrap it in an aria-hidden element and give screen readers the plain text.
+interface Props {
+  text: string;
+  /** Split into letters (for the CSS letter animation) instead of words. */
+  letters?: boolean;
+  /** Index of the first letter, so a stagger can continue across lines. */
+  start?: number;
+  /** Colour the letters along the brand gradient. */
+  gradient?: boolean;
+}
+
+const { text, letters = false, start = 0, gradient = false } = Astro.props;
+const words = text.trim().split(/\s+/).filter(Boolean);
+const total = words.join('').length;
+let index = 0;
+---
+
+{
+  words.map((word, w) => (
+    <Fragment>
+      <span class="split-word">
+        <span class="split-inner">
+          {letters
+            ? [...word].map((char) => {
+                const i = index++;
+                return (
+                  <span
+                    class:list={['split-char', gradient && 'is-gradient']}
+                    style={`--i: ${start + i}; --t: ${total > 1 ? i / (total - 1) : 0}`}
+                  >
+                    {char}
+                  </span>
+                );
+              })
+            : word}
+        </span>
+      </span>
+      {w < words.length - 1 && ' '}
+    </Fragment>
+  ))
+}

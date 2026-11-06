@@ -1,0 +1,30 @@
+---
+import SplitText from './SplitText.astro';
+
+interface Props {
+  /** Position among numbered sections, shown as "01". */
+  index: number;
+  label: string;
+  heading?: string;
+  align?: 'left' | 'center';
+}
+
+const { index, label, heading, align = 'left' } = Astro.props;
+---
+
+<header class:list={['mb-12 md:mb-16', align === 'center' && 'text-center']}>
+  <p class:list={['eyebrow mb-4 flex items-center gap-3', align === 'center' && 'justify-center']} data-reveal>
+    <span class="h-px w-8 bg-brand"></span>
+    <span><span class="text-brand">{String(index).padStart(2, '0')}</span> / {label}</span>
+  </p>
+  {
+    heading && (
+      <h2 class="heading-xl" data-split>
+        <span class="sr-only">{heading}</span>
+        <span aria-hidden="true">
+          <SplitText text={heading} />
+        </span>
+      </h2>
+    )
+  }
+</header>

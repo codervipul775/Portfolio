@@ -1,8 +1,22 @@
+# Dependencies
 node_modules/
+
+# Build output and Astro/Vercel caches
 dist/
 .astro/
 .vercel/
+
+# Environment (keys live here; only the example is committed)
 .env
 .env.*
 !.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS and editor clutter
 .DS_Store
+Thumbs.db
+.idea/
+*.swp

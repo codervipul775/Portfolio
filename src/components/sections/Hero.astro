@@ -1,0 +1,77 @@
+---
+import Button from '../Button.astro';
+import SiteImage from '../SiteImage.astro';
+import SplitText from '../SplitText.astro';
+import type { SectionOf, Site } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'hero'>;
+  site: Site;
+  /** Where the scroll hint points. */
+  nextHref?: string;
+}
+
+const { section, site, nextHref } = Astro.props;
+const lines = section.title.split('\n').filter((line) => line.trim());
+// Letter offsets so the stagger continues from one line to the next.
+const starts = lines.map((_, i) => lines.slice(0, i).join('').replace(/\s/g, '').length);
+const letterCount = lines.join('').replace(/\s/g, '').length;
+---
+
+<section id={section.id} data-scene="hero" class="relative flex min-h-svh items-center pt-28 pb-28">
+  <div class="container-site" data-hero-content>
+    <div class="flex items-center gap-4" data-intro>
+      {
+        section.avatar && (
+          <span class="relative">
+            <SiteImage
+              image={section.avatar}
+              widths={[56, 112, 168]}
+              sizes="56px"
+              class="size-14 rounded-full object-cover ring-2 ring-brand/50 ring-offset-4 ring-offset-bg"
+              priority
+            />
+            <span class="absolute right-0 bottom-0 size-3.5 rounded-full border-2 border-bg bg-emerald-400">
+              <span class="absolute inset-0 animate-ping rounded-full bg-emerald-400/70" />
+            </span>
+          </span>
+        )
+      }
+      <p class="text-lg font-semibold">{site.name}</p>
+    </div>
+
+    <h1 class="heading-display hero-title mt-8">
+      <span class="sr-only">{site.name}, {lines.join(' ')}</span>
+      <span aria-hidden="true">
+        {
+          lines.map((line, i) => (
+            <span class="block">
+              <SplitText text={line} letters start={starts[i]} gradient={lines.length > 1 && i === lines.length - 1} />
+            </span>
+          ))
+        }
+      </span>
+    </h1>
+
+    <div class="mt-10 flex flex-wrap gap-3" data-intro style={`--delay: ${300 + letterCount * 32}ms`}>
+      {section.ctas.map((cta) => <Button link={cta} />)}
+    </div>
+  </div>
+
+  {
+    nextHref && (
+      <a
+        href={nextHref}
+        class="eyebrow absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3"
+        aria-label="Scroll to next section"
+        data-intro
+        style={`--delay: ${600 + letterCount * 32}ms`}
+      >
+        Scroll
+        <span class="relative h-12 w-px overflow-hidden bg-line">
+          <span class="scroll-hint-line absolute inset-0 bg-brand" />
+        </span>
+      </a>
+    )
+  }
+</section>

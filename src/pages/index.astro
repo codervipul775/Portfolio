@@ -1,125 +1,79 @@
 ---
-// Phase 0 placeholder: renders every section unstyled to prove the content
-// pipeline end to end. Phase 1 replaces this with the real design.
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Icon from '../components/Icon.astro';
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import About from '../components/sections/About.astro';
+import Contact from '../components/sections/Contact.astro';
+import Custom from '../components/sections/Custom.astro';
+import Hero from '../components/sections/Hero.astro';
+import Projects from '../components/sections/Projects.astro';
+import Skills from '../components/sections/Skills.astro';
+import Status from '../components/sections/Status.astro';
 import { getContent } from '../data/load';
-import { renderMarkdown } from '../lib/markdown';
-import { linkAttrs } from '../lib/links';
+import type { Section } from '../data/schema';
 
-const { site, sections } = await getContent();
-const visible = sections.filter((s) => s.visible);
-const socialsById = new Map(site.socials.map((s) => [s.id, s]));
+const { site, sections: allSections } = await getContent();
+const sections = allSections.filter((s) => s.visible);
+
+// Eyebrow label ("02 / Skills") when the admin hasn't given the section a nav label.
+const defaultLabels: Record<Section['type'], string> = {
+  hero: '',
+  about: 'About',
+  status: 'Now',
+  skills: 'Skills',
+  projects: 'Projects',
+  contact: 'Contact',
+  custom: 'More',
+};
+
+// Hero and heading-less status sections have no "01 /" header, so they don't take a number.
+const hasHeader = (s: Section) => s.type !== 'hero' && !(s.type === 'status' && !s.heading);
+let count = 0;
+const numbered = sections.map((section) => ({
+  section,
+  index: hasHeader(section) ? ++count : undefined,
+  label: section.navLabel ?? defaultLabels[section.type],
+}));
+const afterHero = sections[sections.findIndex((s) => s.type === 'hero') + 1];
 ---
 
 <Base title={site.seo.title} description={site.seo.description} ogImage={site.seo.ogImage?.url}>
-  <nav class="flex gap-4 p-4">
-    <a href="#home" class="font-bold">{site.initials}</a>
-    {visible.filter((s) => s.navLabel).map((s) => <a href={`#${s.id}`}>{s.navLabel}</a>)}
-  </nav>
+  <a href="#main" class="btn btn-primary fixed top-4 left-4 z-[60] -translate-y-24 focus:translate-y-0">Skip to content</a>
+  <div class="scene-poster" aria-hidden="true"></div>
+  <canvas id="scene-canvas" class="scene-canvas" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <Nav site={site} sections={sections} />
 
-  <main class="mx-auto max-w-4xl space-y-16 p-4 [&_a]:underline">
+  <main id="main">
     {
-      visible.map((section) => (
-        <section id={section.id} class="space-y-4">
-          {section.type === 'hero' && (
-            <>
-              {section.avatar && (
-                <Image src={section.avatar.url} alt={section.avatar.alt} width={120} height={120} class="rounded-full" loading="eager" />
-              )}
-              <h1 class="text-5xl font-extrabold whitespace-pre-line">{section.title}</h1>
-              <div class="flex flex-wrap gap-3">
-                {section.ctas.map((cta) => (
-                  <a href={cta.href} {...linkAttrs(cta.href)}>{cta.label} <Icon name={cta.icon} /></a>
-                ))}
-              </div>
-            </>
-          )}
-
-          {section.type === 'about' && (
-            <>
-              <h2 class="text-2xl font-bold">{section.heading}</h2>
-              <div class="space-y-2" set:html={renderMarkdown(section.body)} />
-              {section.portrait && (
-                <Image src={section.portrait.url} alt={section.portrait.alt} width={300} height={Math.round((300 * (section.portrait.height ?? 1)) / (section.portrait.width ?? 1))} />
-              )}
-              <h3>{section.interestsHeading}</h3>
-              <ul class="flex gap-4">{section.interests.map((i) => <li><Icon name={i.icon} /> {i.label}</li>)}</ul>
-              {section.quote && <blockquote>“{section.quote.text}” — {section.quote.author}</blockquote>}
-            </>
-          )}
-
-          {section.type === 'status' && (
-            <div class="grid gap-4 sm:grid-cols-3">
-              {section.cards.map((card) => (
-                <div class="rounded border border-neutral-800 p-4" style={{ borderColor: card.accent }}>
-                  <h3 class="font-bold"><Icon name={card.icon} /> {card.title}</h3>
-                  <div set:html={renderMarkdown(card.body)} />
-                  {card.chips.join(' · ')}
-                  {card.socialIds.map((sid) => socialsById.get(sid)).filter((s) => s !== undefined).map((s) => (
-                    <a href={s.href} {...linkAttrs(s.href)}><Icon name={s.icon} label={s.label} /></a>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {section.type === 'skills' && (
-            <>
-              <h2 class="text-2xl font-bold">{section.heading}</h2>
-              {section.categories.map((cat) => (
-                <div>
-                  <h3 class="font-bold">{cat.name}</h3>
-                  <ul class="flex flex-wrap gap-3">{cat.skills.map((s) => <li><Icon name={s.icon} /> {s.name}</li>)}</ul>
-                </div>
-              ))}
-            </>
-          )}
-
-          {section.type === 'projects' && (
-            <>
-              <h2 class="text-2xl font-bold">{section.heading}</h2>
-              {section.projects.filter((p) => p.visible).map((p) => (
-                <article class="space-y-2">
-                  {p.featured && p.image && (
-                    <Image src={p.image.url} alt={p.image.alt} width={800} height={Math.round((800 * (p.image.height ?? 9)) / (p.image.width ?? 16))} />
-                  )}
-                  <h3 class="text-xl font-bold">{p.title}</h3>
-                  <p>{p.description}</p>
-                  <p class="text-sm">{p.tags.join(' · ')}</p>
-                  <div class="flex gap-3">
-                    {p.links.map((l) => <a href={l.href} {...linkAttrs(l.href)}><Icon name={l.icon} /> {l.label}</a>)}
-                  </div>
-                </article>
-              ))}
-              {section.cta && <a href={section.cta.href} {...linkAttrs(section.cta.href)}>{section.cta.label}</a>}
-            </>
-          )}
-
-          {section.type === 'contact' && (
-            <>
-              <h2 class="text-2xl font-bold">{section.heading}</h2>
-              <div set:html={renderMarkdown(section.body)} />
-              {section.showSocials && (
-                <div class="flex gap-4 text-2xl">
-                  {site.socials.map((s) => <a href={s.href} {...linkAttrs(s.href)}><Icon name={s.icon} label={s.label} /></a>)}
-                </div>
-              )}
-              <div class="flex gap-3">{section.ctas.map((cta) => <a href={cta.href}>{cta.label}</a>)}</div>
-            </>
-          )}
-
-          {section.type === 'custom' && (
-            <>
-              <h2 class="text-2xl font-bold">{section.heading}</h2>
-              <div set:html={renderMarkdown(section.body)} />
-            </>
-          )}
-        </section>
-      ))
+      numbered.map(({ section, index = 0, label }) => {
+        switch (section.type) {
+          case 'hero':
+            return <Hero section={section} site={site} nextHref={afterHero && `#${afterHero.id}`} />;
+          case 'about':
+            return <About section={section} index={index} label={label} />;
+          case 'status':
+            return <Status section={section} site={site} index={index || undefined} label={label} />;
+          case 'skills':
+            return <Skills section={section} index={index} label={label} />;
+          case 'projects':
+            return <Projects section={section} index={index} label={label} />;
+          case 'contact':
+            return <Contact section={section} site={site} index={index} label={label} />;
+          case 'custom':
+            return <Custom section={section} index={index} label={label} />;
+        }
+      })
     }
   </main>
 
-  <footer class="p-4 text-sm text-neutral-400">© {new Date().getFullYear()} {site.name}. {site.footer}</footer>
+  <Footer site={site} />
 </Base>
+
+<script>
+  import '../scripts/ui';
+  import '../scripts/motion';
+  import '../scripts/skill-sphere';
+  import '../scripts/scene-loader';
+</script>

@@ -1,0 +1,49 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageRef } from '../data/schema';
+
+interface Props {
+  image: ImageRef;
+  /** Rendered widths for the srcset. */
+  widths: number[];
+  sizes: string;
+  class?: string;
+  /** Load immediately with high priority (above-the-fold images only). */
+  priority?: boolean;
+}
+
+const { image, widths, sizes, class: className, priority = false } = Astro.props;
+---
+
+{
+  image.width && image.height ? (
+    <Picture
+      src={image.url}
+      alt={image.alt}
+      width={image.width}
+      height={image.height}
+      widths={widths}
+      sizes={sizes}
+      formats={['avif']}
+      fallbackFormat="webp"
+      class={className}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      decoding="async"
+    />
+  ) : (
+    <Picture
+      src={image.url}
+      alt={image.alt}
+      inferSize
+      widths={widths}
+      sizes={sizes}
+      formats={['avif']}
+      fallbackFormat="webp"
+      class={className}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      decoding="async"
+    />
+  )
+}

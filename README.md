@@ -2,7 +2,7 @@
 
 Vipul Yadav's portfolio: [codervipul775.vercel.app](https://codervipul775.vercel.app)
 
-Static [Astro](https://astro.build) site with a React Three Fiber 3D scene, content managed from `/admin` and stored in Supabase.
+Static [Astro](https://astro.build) site with a three.js WebGL background, GSAP + Lenis scroll animations, and content stored in Supabase (editable from `/admin` once that ships).
 
 ## Develop
 
