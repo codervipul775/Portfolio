@@ -223,7 +223,10 @@ function buildLaptop(screenTexture: CanvasTexture) {
   return { laptop, lid, body, shadow: shadow.material, keys, setKey };
 }
 
-export function startScene(canvas: HTMLCanvasElement) {
+/** Waits for the next frame, so start-up work is split into short tasks instead of one long one. */
+const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+export async function startScene(canvas: HTMLCanvasElement) {
   const root = document.documentElement;
   const narrow = () => innerWidth < 768;
   const lite = narrow() || (navigator.hardwareConcurrency ?? 8) <= 4;
@@ -231,20 +234,21 @@ export function startScene(canvas: HTMLCanvasElement) {
 
   let renderer: WebGLRenderer;
   try {
-    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    // failIfMajorPerformanceCaveat: no 3D on software rendering (no usable GPU), where every
+    // frame would block the page. The CSS poster stays as the background instead.
+    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: true });
   } catch {
-    return; // No WebGL: the CSS poster stays as the background.
+    return;
   }
+  // Checking shader errors makes the page wait for each shader to compile; only do it in development.
+  renderer.debug.checkShaderErrors = import.meta.env.DEV;
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = ACESFilmicToneMapping;
   let pixelRatio = Math.min(devicePixelRatio, 1.75);
   renderer.setPixelRatio(pixelRatio);
 
   const scene = new Scene();
-  const pmrem = new PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.55;
-  pmrem.dispose();
 
   const camera = new PerspectiveCamera(35, 1, 0.1, 60);
   camera.position.z = 8;
@@ -256,8 +260,10 @@ export function startScene(canvas: HTMLCanvasElement) {
   rim.position.set(-4, 2, -3);
   scene.add(key, rim);
 
-  const screen = createScreen(readSceneData());
+  await nextFrame();
+  const screen = createScreen(readSceneData(), lite ? 0.5 : 1);
   screen.draw(0, true);
+  await nextFrame();
   const { laptop, lid, body, shadow, keys, setKey } = buildLaptop(screen.texture);
 
   // Human-ish typing rhythm: small random gaps between keys, a pause at each line end.
@@ -270,12 +276,16 @@ export function startScene(canvas: HTMLCanvasElement) {
   const pressed = new Map<number, number>();
   lid.rotation.x = LID_CLOSED;
 
+  await nextFrame();
+
   // rig (scroll position) → tilt (pointer) → laptop
   const rig = new Group();
   const tilt = new Group();
   tilt.add(laptop);
   rig.add(tilt);
   scene.add(rig);
+
+  await nextFrame();
 
   // Ambient dust filling the whole viewport.
   const dustCount = lite ? 700 : 1800;
@@ -371,6 +381,7 @@ export function startScene(canvas: HTMLCanvasElement) {
   let ready = false;
   let openedAt = -1; // when the lid started opening
   let typedChars = -1;
+  let lastScreenDraw = -1;
   let cursorVisible = true;
   let away = 0; // 0 = hero in view, 1 = scrolled past it
 
@@ -434,10 +445,12 @@ export function startScene(canvas: HTMLCanvasElement) {
           chars++;
         }
       }
+      // Redraw at most ~30 times a second: each redraw re-uploads the whole screen to the GPU.
       const blink = chars >= screen.total ? Math.floor(clock / 0.53) % 2 === 0 : true;
-      if (chars !== typedChars || blink !== cursorVisible) {
+      if ((chars !== typedChars || blink !== cursorVisible) && clock - lastScreenDraw > 1 / 30) {
         typedChars = chars;
         cursorVisible = blink;
+        lastScreenDraw = clock;
         screen.draw(chars, blink);
       }
 
@@ -471,6 +484,15 @@ export function startScene(canvas: HTMLCanvasElement) {
       canvas.classList.add('is-ready');
     }
   };
+
+  // Reflections for the metal body: a burst of GPU work, so it gets a frame to itself.
+  await nextFrame();
+  const pmrem = new PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  // Compile every shader in the background (KHR_parallel_shader_compile) before the first frame.
+  await nextFrame();
+  await renderer.compileAsync(scene, camera);
 
   const play = () => {
     last = performance.now();

@@ -13,11 +13,14 @@ const COLORS = {
 const FONT = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
 /** A code editor drawn on a canvas, used as the laptop's display texture. */
-export function createScreen(data: SceneData) {
+export function createScreen(data: SceneData, resolution = 1) {
+  // Layout is in 1024×640 units; `resolution` scales the actual pixels (0.5 on phones,
+  // where the laptop is small, so each redraw uploads 4× less to the GPU).
   const W = 1024;
   const H = 640;
-  const canvas = Object.assign(document.createElement('canvas'), { width: W, height: H });
+  const canvas = Object.assign(document.createElement('canvas'), { width: W * resolution, height: H * resolution });
   const ctx = canvas.getContext('2d')!;
+  ctx.scale(resolution, resolution);
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   texture.anisotropy = 4;
