@@ -9,6 +9,11 @@ import { playIntro } from './intro';
 gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/**
+ * Runs set-up for things below the first screen in its own idle moment, so start-up is a
+ * series of short tasks instead of one long one. (It all finishes during the intro.)
+ */
+const later = (fn: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(() => fn(), { timeout: 1500 }) : setTimeout(fn, 50));
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const $$ = <T extends HTMLElement = HTMLElement>(selector: string, root: ParentNode = document) =>
   [...root.querySelectorAll<T>(selector)];
@@ -29,31 +34,33 @@ if (!reduceMotion) {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
-  // No scrolling while the name flies in; the scrollbar comes back after, so re-measure.
+  // No scrolling while the name flies in. (No re-measure needed after: scrollbar-gutter keeps
+  // the width steady, and ScrollTrigger already re-measures on load and resize.)
   lenis.stop();
-  playIntro(() => {
-    lenis.start();
-    ScrollTrigger.refresh();
+  playIntro(() => lenis.start());
+
+  later(() => {
+    // Headings rise word by word out of a mask (words are split at build time).
+    for (const heading of $$('[data-split]')) {
+      const words = $$('.split-inner', heading);
+      gsap.set(words, { yPercent: 115, rotate: 4 });
+      ScrollTrigger.create({
+        trigger: heading,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => gsap.to(words, { yPercent: 0, rotate: 0, duration: 1.2, ease: 'expo.out', stagger: 0.07 }),
+      });
+    }
   });
 
-  // Headings rise word by word out of a mask (words are split at build time).
-  for (const heading of $$('[data-split]')) {
-    const words = $$('.split-inner', heading);
-    gsap.set(words, { yPercent: 115, rotate: 4 });
-    ScrollTrigger.create({
-      trigger: heading,
-      start: 'top 88%',
+  later(() => {
+    // Everything else fades up in batches as it scrolls into view.
+    gsap.set('[data-reveal]', { autoAlpha: 0, y: 48 });
+    ScrollTrigger.batch('[data-reveal]', {
+      start: 'top 90%',
       once: true,
-      onEnter: () => gsap.to(words, { yPercent: 0, rotate: 0, duration: 1.2, ease: 'expo.out', stagger: 0.07 }),
+      onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true }),
     });
-  }
-
-  // Everything else fades up in batches as it scrolls into view.
-  gsap.set('[data-reveal]', { autoAlpha: 0, y: 48 });
-  ScrollTrigger.batch('[data-reveal]', {
-    start: 'top 90%',
-    once: true,
-    onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true }),
   });
 
   // Hero drifts up and fades as you leave it.
@@ -68,28 +75,30 @@ if (!reduceMotion) {
     });
   }
 
-  // Project screenshots swing from tilted to flat as they scroll in.
-  $$('[data-frame]').forEach((frame, i) => {
-    const dir = i % 2 ? -1 : 1;
-    gsap.fromTo(
-      frame,
-      { rotationX: 26, rotationY: -14 * dir, scale: 0.86, transformPerspective: 1400, transformOrigin: '50% 100%' },
-      {
-        rotationX: 0,
-        rotationY: 0,
-        scale: 1,
-        ease: 'none',
-        scrollTrigger: { trigger: frame, start: 'top 98%', end: 'top 30%', scrub: 0.8 },
-      },
-    );
-    const img = frame.querySelector('img');
-    if (img) {
+  later(() => {
+    // Project screenshots swing from tilted to flat as they scroll in.
+    $$('[data-frame]').forEach((frame, i) => {
+      const dir = i % 2 ? -1 : 1;
       gsap.fromTo(
-        img,
-        { yPercent: -5, scale: 1.12 },
-        { yPercent: 5, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } },
+        frame,
+        { rotationX: 26, rotationY: -14 * dir, scale: 0.86, transformPerspective: 1400, transformOrigin: '50% 100%' },
+        {
+          rotationX: 0,
+          rotationY: 0,
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: { trigger: frame, start: 'top 98%', end: 'top 30%', scrub: 0.8 },
+        },
       );
-    }
+      const img = frame.querySelector('img');
+      if (img) {
+        gsap.fromTo(
+          img,
+          { yPercent: -5, scale: 1.12 },
+          { yPercent: 5, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } },
+        );
+      }
+    });
   });
 
   // Reading progress bar.
@@ -99,84 +108,91 @@ if (!reduceMotion) {
     scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
   });
 
-  // Marquee rows lean with scroll speed.
-  const rows = $$('[data-marquee]');
-  if (rows.length) {
-    const skew = gsap.quickTo(rows, 'skewX', { duration: 0.5, ease: 'power3' });
-    ScrollTrigger.create({ onUpdate: (self) => skew(gsap.utils.clamp(-10, 10, self.getVelocity() / -250)) });
-  }
+  later(() => {
+    // Marquee rows lean with scroll speed.
+    const rows = $$('[data-marquee]');
+    if (rows.length) {
+      const skew = gsap.quickTo(rows, 'skewX', { duration: 0.5, ease: 'power3' });
+      ScrollTrigger.create({ onUpdate: (self) => skew(gsap.utils.clamp(-10, 10, self.getVelocity() / -250)) });
+    }
+  });
 
-  // Giant name in the footer rises letter by letter.
-  for (const name of $$('[data-giant-name]')) {
-    gsap.from($$('span', name), {
-      yPercent: 105,
-      ease: 'none',
-      stagger: 0.04,
-      scrollTrigger: { trigger: name, start: 'top bottom', end: 'bottom bottom', scrub: 1 },
-    });
-  }
-
-  // Layout settles once the web font loads.
-  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  later(() => {
+    // Giant name in the footer rises letter by letter.
+    for (const name of $$('[data-giant-name]')) {
+      gsap.from($$('span', name), {
+        yPercent: 105,
+        ease: 'none',
+        stagger: 0.04,
+        scrollTrigger: { trigger: name, start: 'top bottom', end: 'bottom bottom', scrub: 1 },
+      });
+    }
+  });
 }
 
 if (!reduceMotion && finePointer) {
-  // Buttons lean towards the cursor.
-  for (const el of $$('[data-magnetic]')) {
-    const x = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' });
-    const y = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });
-    el.addEventListener('pointermove', (e) => {
-      const rect = el.getBoundingClientRect();
-      x((e.clientX - rect.left - rect.width / 2) * 0.3);
-      y((e.clientY - rect.top - rect.height / 2) * 0.3);
-    });
-    el.addEventListener('pointerleave', () => {
-      x(0);
-      y(0);
-    });
-  }
-
-  // Cards tilt in 3D towards the cursor.
-  for (const el of $$('[data-tilt]')) {
-    const max = Number(el.dataset.tilt) || 8;
-    gsap.set(el, { transformPerspective: 1000 });
-    const rx = gsap.quickTo(el, 'rotationX', { duration: 0.7, ease: 'power3' });
-    const ry = gsap.quickTo(el, 'rotationY', { duration: 0.7, ease: 'power3' });
-    el.addEventListener('pointermove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width;
-      const py = (e.clientY - rect.top) / rect.height;
-      ry((px - 0.5) * max * 2);
-      rx((0.5 - py) * max * 2);
-      el.style.setProperty('--gx', `${px * 100}%`);
-      el.style.setProperty('--gy', `${py * 100}%`);
-    });
-    el.addEventListener('pointerleave', () => {
-      rx(0);
-      ry(0);
-    });
-  }
-
-  // Cursor ring that trails the pointer and grows over interactive things.
-  const ring = document.createElement('div');
-  ring.className = 'cursor-ring';
-  ring.setAttribute('aria-hidden', 'true');
-  document.body.append(ring);
-  const cx = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3' });
-  const cy = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3' });
-  addEventListener(
-    'pointermove',
-    (e) => {
-      cx(e.clientX);
-      cy(e.clientY);
-      ring.classList.add('is-visible');
-    },
-    { passive: true },
-  );
-  document.addEventListener('pointerover', (e) => {
-    const target = e.target as Element;
-    ring.classList.toggle('is-active', !!target.closest('a, button, [data-tilt]'));
-    ring.classList.toggle('is-grab', !!target.closest('[data-skill-sphere]'));
+  later(() => {
+    // Buttons lean towards the cursor.
+    for (const el of $$('[data-magnetic]')) {
+      const x = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' });
+      const y = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });
+      el.addEventListener('pointermove', (e) => {
+        const rect = el.getBoundingClientRect();
+        x((e.clientX - rect.left - rect.width / 2) * 0.3);
+        y((e.clientY - rect.top - rect.height / 2) * 0.3);
+      });
+      el.addEventListener('pointerleave', () => {
+        x(0);
+        y(0);
+      });
+    }
   });
-  document.documentElement.addEventListener('pointerleave', () => ring.classList.remove('is-visible'));
+
+  later(() => {
+    // Cards tilt in 3D towards the cursor.
+    for (const el of $$('[data-tilt]')) {
+      const max = Number(el.dataset.tilt) || 8;
+      gsap.set(el, { transformPerspective: 1000 });
+      const rx = gsap.quickTo(el, 'rotationX', { duration: 0.7, ease: 'power3' });
+      const ry = gsap.quickTo(el, 'rotationY', { duration: 0.7, ease: 'power3' });
+      el.addEventListener('pointermove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        ry((px - 0.5) * max * 2);
+        rx((0.5 - py) * max * 2);
+        el.style.setProperty('--gx', `${px * 100}%`);
+        el.style.setProperty('--gy', `${py * 100}%`);
+      });
+      el.addEventListener('pointerleave', () => {
+        rx(0);
+        ry(0);
+      });
+    }
+  });
+
+  later(() => {
+    // Cursor ring that trails the pointer and grows over interactive things.
+    const ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+    ring.setAttribute('aria-hidden', 'true');
+    document.body.append(ring);
+    const cx = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3' });
+    const cy = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3' });
+    addEventListener(
+      'pointermove',
+      (e) => {
+        cx(e.clientX);
+        cy(e.clientY);
+        ring.classList.add('is-visible');
+      },
+      { passive: true },
+    );
+    document.addEventListener('pointerover', (e) => {
+      const target = e.target as Element;
+      ring.classList.toggle('is-active', !!target.closest('a, button, [data-tilt]'));
+      ring.classList.toggle('is-grab', !!target.closest('[data-skill-sphere]'));
+    });
+    document.documentElement.addEventListener('pointerleave', () => ring.classList.remove('is-visible'));
+  });
 }

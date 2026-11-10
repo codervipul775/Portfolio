@@ -432,22 +432,14 @@
 
 }
 
+/* Slides with transform only, so it runs on the GPU compositor. */
 @keyframes scroll-hint {
   0% {
-    transform: scaleY(0);
-    transform-origin: top;
+    transform: translateY(-100%);
   }
-  45% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  55% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
+  60%,
   100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
+    transform: translateY(100%);
   }
 }
 

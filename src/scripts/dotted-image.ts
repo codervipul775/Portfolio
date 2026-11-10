@@ -85,7 +85,10 @@ const token = (name: string) => hexToRgb(getComputedStyle(document.documentEleme
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-function createProgram(gl: WebGLRenderingContext, fragment: string) {
+const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+/** Starts compiling a program. Its status isn't read here, since that would make the page wait. */
+function compileProgram(gl: WebGLRenderingContext, fragment: string) {
   const program = gl.createProgram()!;
   for (const [type, source] of [
     [gl.VERTEX_SHADER, VERTEX],
@@ -94,10 +97,21 @@ function createProgram(gl: WebGLRenderingContext, fragment: string) {
     const shader = gl.createShader(type)!;
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader) ?? 'Shader failed to compile');
     gl.attachShader(program, shader);
   }
   gl.linkProgram(program);
+  return program;
+}
+
+/** Waits for programs to finish compiling in the background (KHR_parallel_shader_compile), frame by frame. */
+async function whenLinked(gl: WebGLRenderingContext, programs: WebGLProgram[]) {
+  const parallel = gl.getExtension('KHR_parallel_shader_compile');
+  if (parallel) while (!programs.every((p) => gl.getProgramParameter(p, parallel.COMPLETION_STATUS_KHR))) await nextFrame();
+  for (const p of programs) if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p) ?? 'Shader failed to link');
+}
+
+/** Attribute and uniform access for a linked program. */
+function programApi(gl: WebGLRenderingContext, program: WebGLProgram) {
   const position = gl.getAttribLocation(program, 'aPosition');
   gl.enableVertexAttribArray(position);
   gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
@@ -120,18 +134,20 @@ function createTexture(gl: WebGLRenderingContext, unit: number) {
   return texture;
 }
 
-function dotImage(container: HTMLElement, img: HTMLImageElement) {
+async function dotImage(container: HTMLElement, img: HTMLImageElement) {
   const canvas = document.createElement('canvas');
   canvas.className = 'dotted-canvas';
   canvas.setAttribute('aria-hidden', 'true');
-  const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
+  // No dots on software rendering (no usable GPU): the normal photo stays.
+  const gl = canvas.getContext('webgl', { antialias: false, alpha: false, failIfMajorPerformanceCaveat: true });
   if (!gl) return;
 
   // One full-screen quad shared by both passes.
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  const dots = createProgram(gl, DOTS_FRAGMENT);
-  const reveal = createProgram(gl, REVEAL_FRAGMENT);
+  const programs = [compileProgram(gl, DOTS_FRAGMENT), compileProgram(gl, REVEAL_FRAGMENT)];
+  await whenLinked(gl, programs);
+  const [dots, reveal] = programs.map((program) => programApi(gl, program));
 
   // Texture unit 0: the photo. Unit 1: the stippled render, via a framebuffer.
   createTexture(gl, 0);
@@ -192,8 +208,11 @@ function dotImage(container: HTMLElement, img: HTMLImageElement) {
   const resize = () => {
     const rect = container.getBoundingClientRect();
     dpr = Math.min(devicePixelRatio, 2);
-    width = canvas.width = Math.round(rect.width * dpr);
-    height = canvas.height = Math.round(rect.height * dpr);
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if (w === width && h === height) return;
+    width = canvas.width = w;
+    height = canvas.height = h;
     renderDots();
   };
 
@@ -242,12 +261,23 @@ function dotImage(container: HTMLElement, img: HTMLImageElement) {
   addEventListener('themechange', renderDots);
 
   img.closest('picture')?.after(canvas);
-  new ResizeObserver(resize).observe(container);
+  // Re-stipple only once a resize settles (e.g. the scrollbar appearing after the intro).
+  let resizeTimer = 0;
+  new ResizeObserver(() => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(resize, 150);
+  }).observe(container);
   resize();
   requestAnimationFrame(() => canvas.classList.add('is-ready'));
 }
 
-// Set up each [data-dotted] image as it approaches the screen.
+// The first scroll, tap or key press: until then the visitor can't reach the portrait.
+const interacted = new Promise<void>((resolve) => {
+  for (const type of ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown']) addEventListener(type, () => resolve(), { once: true, passive: true });
+});
+
+// Set up each [data-dotted] image as it approaches the screen: right away if it's already
+// visible, otherwise once the visitor starts moving, so it never competes with page load.
 const observer = new IntersectionObserver(
   (entries) => {
     for (const entry of entries) {
@@ -257,8 +287,9 @@ const observer = new IntersectionObserver(
       const img = container.querySelector('img');
       if (!img) continue;
       const start = () => img.decode().then(() => dotImage(container, img)).catch(() => {});
-      if (img.complete && img.naturalWidth) start();
-      else img.addEventListener('load', start, { once: true });
+      const whenLoaded = () => (img.complete && img.naturalWidth ? start() : img.addEventListener('load', start, { once: true }));
+      if (container.getBoundingClientRect().top < innerHeight) whenLoaded();
+      else interacted.then(whenLoaded);
     }
   },
   { rootMargin: '300px' },
