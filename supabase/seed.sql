@@ -167,6 +167,84 @@ insert into public.site_content (id, data) values
       ]
     },
     {
+      "id": "experience",
+      "type": "experience",
+      "visible": true,
+      "navLabel": "Experience",
+      "heading": "Building in Production",
+      "roles": [
+        {
+          "id": "infinite-locus",
+          "company": "Infinite Locus Pvt. Ltd.",
+          "role": "SDE Intern",
+          "kind": "Paid internship",
+          "start": "2026-06",
+          "end": "2026-11",
+          "summary": "Worked on production backends for live clients: an ERP-driven order pipeline handling **₹1 Cr+ in daily sales**, and the services behind a distribution and logistics platform.",
+          "projects": [
+            {
+              "id": "erp-order-pipeline",
+              "title": "Order & Warehouse Pipeline on ERPNext",
+              "stat": {
+                "value": "₹1 Cr+",
+                "label": "in sales flowing through it daily"
+              },
+              "summary": "Warehouse management for a high-volume brand, built on **ERPNext** and the **Frappe** framework.",
+              "flow": [
+                "Shopify order",
+                "ERPNext",
+                "Warehouse",
+                "E-commerce integrations"
+              ],
+              "console": [
+                "$ order received ← Shopify",
+                "✗ 1205 · lock wait timeout exceeded",
+                "↻ queued as a background job · retrying",
+                "✓ processed in ERPNext → sent to integrations"
+              ],
+              "highlights": [
+                "Worked on the S1 journey: orders coming in from Shopify, processed in ERPNext, then sent out through the e-commerce integrations.",
+                "Tackled database lock-wait (1205) failures in the pipeline.",
+                "Implemented background jobs and an automatic retry mechanism across the pipeline."
+              ],
+              "brands": [],
+              "tags": [
+                "ERPNext",
+                "Frappe",
+                "Python",
+                "Shopify",
+                "Background jobs"
+              ]
+            },
+            {
+              "id": "distribution-backend",
+              "title": "Backend for a Distribution & Logistics Platform",
+              "summary": "A tech-enabled distribution and logistics partner for leading consumer brands.",
+              "flow": [],
+              "console": [],
+              "highlights": [
+                "Fixed backend bugs across FastAPI and Node.js/Express services.",
+                "Worked on the MySQL queries behind the platform."
+              ],
+              "brandsLabel": "Partner to brands like",
+              "brands": [
+                "Britannia",
+                "Godrej",
+                "Dabur"
+              ],
+              "tags": [
+                "FastAPI",
+                "Python",
+                "Node.js",
+                "Express.js",
+                "MySQL"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "skills",
       "type": "skills",
       "visible": true,
@@ -841,6 +919,84 @@ insert into public.site_content (id, data) values
           "socialIds": [
             "leetcode",
             "codeforces"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "type": "experience",
+      "visible": true,
+      "navLabel": "Experience",
+      "heading": "Building in Production",
+      "roles": [
+        {
+          "id": "infinite-locus",
+          "company": "Infinite Locus Pvt. Ltd.",
+          "role": "SDE Intern",
+          "kind": "Paid internship",
+          "start": "2026-06",
+          "end": "2026-11",
+          "summary": "Worked on production backends for live clients: an ERP-driven order pipeline handling **₹1 Cr+ in daily sales**, and the services behind a distribution and logistics platform.",
+          "projects": [
+            {
+              "id": "erp-order-pipeline",
+              "title": "Order & Warehouse Pipeline on ERPNext",
+              "stat": {
+                "value": "₹1 Cr+",
+                "label": "in sales flowing through it daily"
+              },
+              "summary": "Warehouse management for a high-volume brand, built on **ERPNext** and the **Frappe** framework.",
+              "flow": [
+                "Shopify order",
+                "ERPNext",
+                "Warehouse",
+                "E-commerce integrations"
+              ],
+              "console": [
+                "$ order received ← Shopify",
+                "✗ 1205 · lock wait timeout exceeded",
+                "↻ queued as a background job · retrying",
+                "✓ processed in ERPNext → sent to integrations"
+              ],
+              "highlights": [
+                "Worked on the S1 journey: orders coming in from Shopify, processed in ERPNext, then sent out through the e-commerce integrations.",
+                "Tackled database lock-wait (1205) failures in the pipeline.",
+                "Implemented background jobs and an automatic retry mechanism across the pipeline."
+              ],
+              "brands": [],
+              "tags": [
+                "ERPNext",
+                "Frappe",
+                "Python",
+                "Shopify",
+                "Background jobs"
+              ]
+            },
+            {
+              "id": "distribution-backend",
+              "title": "Backend for a Distribution & Logistics Platform",
+              "summary": "A tech-enabled distribution and logistics partner for leading consumer brands.",
+              "flow": [],
+              "console": [],
+              "highlights": [
+                "Fixed backend bugs across FastAPI and Node.js/Express services.",
+                "Worked on the MySQL queries behind the platform."
+              ],
+              "brandsLabel": "Partner to brands like",
+              "brands": [
+                "Britannia",
+                "Godrej",
+                "Dabur"
+              ],
+              "tags": [
+                "FastAPI",
+                "Python",
+                "Node.js",
+                "Express.js",
+                "MySQL"
+              ]
+            }
           ]
         }
       ]

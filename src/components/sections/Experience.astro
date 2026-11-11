@@ -1,0 +1,197 @@
+---
+import Icon from '../Icon.astro';
+import Markdown from '../Markdown.astro';
+import SectionHeader from '../SectionHeader.astro';
+import SiteImage from '../SiteImage.astro';
+import Tags from '../Tags.astro';
+import { describeTenure } from '../../lib/tenure';
+import type { SectionOf } from '../../data/schema';
+
+interface Props {
+  section: SectionOf<'experience'>;
+  index: number;
+  label: string;
+}
+
+const { section, index, label } = Astro.props;
+
+/** "Infinite Locus Pvt. Ltd." → "IL", for the logo tile when there's no logo. */
+const monogram = (company: string) =>
+  company
+    .split(/\s+/)
+    .filter((word) => /^[A-Za-z]/.test(word) && !/^(pvt|ltd|inc|llc|llp|private|limited)\.?$/i.test(word))
+    .slice(0, 2)
+    .map((word) => word[0].toUpperCase())
+    .join('');
+
+/** Terminal line colour from its first character. */
+const lineKind = (line: string) =>
+  line.startsWith('$') ? 'prompt' : line.startsWith('✗') ? 'error' : line.startsWith('↻') ? 'retry' : line.startsWith('✓') ? 'success' : 'plain';
+
+const clean = (lines: string[]) => lines.map((line) => line.trim()).filter(Boolean);
+---
+
+<section id={section.id} data-scene="experience" class="section-pad">
+  <div class="container-site">
+    <SectionHeader index={index} label={label} heading={section.heading} />
+
+    <div class="space-y-24">
+      {
+        section.roles.map((role) => {
+          const tenure = describeTenure(role.start, role.end);
+          return (
+            <div class="grid gap-10 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-14">
+              <aside class="lg:sticky lg:top-28 lg:self-start" data-reveal>
+                <div class="card spotlight relative overflow-hidden p-6 md:p-7" data-tilt="5">
+                  <div class="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(70%_100%_at_30%_0%,color-mix(in_oklab,var(--brand)_18%,transparent),transparent)]" />
+
+                  <div class="relative flex items-center gap-4">
+                    {role.logo ? (
+                      <SiteImage image={role.logo} widths={[56, 112]} sizes="56px" class="size-14 rounded-2xl border border-line object-cover" />
+                    ) : (
+                      <span class="exp-monogram" aria-hidden="true">
+                        {monogram(role.company)}
+                      </span>
+                    )}
+                    <div class="min-w-0">
+                      {role.kind && <p class="eyebrow">{role.kind}</p>}
+                      <h3 class="text-lg leading-snug font-semibold">{role.company}</h3>
+                    </div>
+                  </div>
+
+                  <p class="heading-lg text-gradient relative mt-6">{role.role}</p>
+                  <p class="relative mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+                    <span>{tenure.range}</span>
+                    <span class="text-faint">·</span>
+                    <span>{tenure.duration}</span>
+                    {role.location && (
+                      <>
+                        <span class="text-faint">·</span>
+                        <span>{role.location}</span>
+                      </>
+                    )}
+                  </p>
+                  {tenure.ongoing && (
+                    <p class="exp-ongoing relative mt-4">
+                      <span class="relative size-2 rounded-full bg-emerald-400">
+                        <span class="absolute inset-0 animate-ping rounded-full bg-emerald-400/70" />
+                      </span>
+                      Ongoing
+                    </p>
+                  )}
+
+                  <div class="exp-timeline relative mt-7" aria-hidden="true">
+                    <div class="exp-timeline-track">
+                      <span class="exp-timeline-fill" data-exp-fill />
+                    </div>
+                    <ol class="exp-timeline-ticks">
+                      {tenure.ticks.map((tick) => (
+                        <li>{tick}</li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <Markdown source={role.summary} class="relative mt-7 leading-relaxed text-muted" />
+                </div>
+              </aside>
+
+              <ol class="exp-rail" data-exp-rail>
+                <span class="exp-rail-line" aria-hidden="true">
+                  <span class="exp-rail-fill" data-exp-rail-fill />
+                </span>
+                {role.projects.map((project, i) => {
+                  const flow = clean(project.flow);
+                  const consoleLines = clean(project.console);
+                  const highlights = clean(project.highlights);
+                  return (
+                    <li class="exp-entry" data-exp-entry>
+                      <span class="exp-node" aria-hidden="true" />
+                      <article class="card spotlight exp-card relative overflow-hidden p-6 md:p-8" data-reveal>
+                        <p class="eyebrow">
+                          <span class="text-brand">{String(i + 1).padStart(2, '0')}</span> / Project
+                        </p>
+                        <h4 class="mt-3 text-2xl leading-tight font-bold tracking-tight md:text-3xl">{project.title}</h4>
+
+                        {project.stat && (
+                          <p class="exp-stat">
+                            <span class="exp-stat-value">{project.stat.value}</span>
+                            {project.stat.label && <span class="exp-stat-label">{project.stat.label}</span>}
+                          </p>
+                        )}
+
+                        <Markdown source={project.summary} class="mt-4 text-lg leading-relaxed text-muted" />
+
+                        {flow.length > 0 && (
+                          <div class="exp-flow-wrap">
+                          <div class="exp-flow" role="img" aria-label={`Flow: ${flow.join(' → ')}`}>
+                            {flow.map((step, s) => (
+                              <Fragment>
+                                <span class="exp-flow-node">
+                                  <span class="exp-flow-index">{String(s + 1).padStart(2, '0')}</span>
+                                  {step}
+                                </span>
+                                {s < flow.length - 1 && (
+                                  <span class="exp-flow-link" aria-hidden="true">
+                                    <span class="exp-flow-packet" style={`--delay: ${s * 0.5}s`} />
+                                  </span>
+                                )}
+                              </Fragment>
+                            ))}
+                          </div>
+                          </div>
+                        )}
+
+                        {consoleLines.length > 0 && (
+                          <div class="exp-console" data-exp-console>
+                            <div class="exp-console-bar" aria-hidden="true">
+                              <span class="bg-[#ff5f57]" />
+                              <span class="bg-[#febc2e]" />
+                              <span class="bg-[#28c840]" />
+                              <em>pipeline.log</em>
+                            </div>
+                            <ol class="exp-console-lines">
+                              {consoleLines.map((line, l) => (
+                                <li class={`is-${lineKind(line)}`} style={`--line: ${l}`}>
+                                  {line}
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        )}
+
+                        {highlights.length > 0 && (
+                          <ul class="mt-6 space-y-3">
+                            {highlights.map((highlight) => (
+                              <li class="flex gap-3 leading-relaxed">
+                                <Icon name="lucide:zap" class="mt-1 shrink-0 text-brand" />
+                                <span>{highlight}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {project.brands.length > 0 && (
+                          <div class="mt-7">
+                            {project.brandsLabel && <p class="eyebrow mb-3">{project.brandsLabel}</p>}
+                            <ul class="flex flex-wrap gap-2.5">
+                              {project.brands.map((brand) => (
+                                <li class="exp-brand">{brand}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        <Tags tags={project.tags} class="mt-7" />
+                        <span class="exp-dim" aria-hidden="true" />
+                      </article>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

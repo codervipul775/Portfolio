@@ -20,6 +20,7 @@ export const TYPE_INFO: Record<Section['type'], { label: string; icon: string; d
   skills: { label: 'Skills', icon: 'lucide:cpu', description: 'Skill categories, the 3D sphere and the marquee.' },
   projects: { label: 'Projects', icon: 'lucide:folder-kanban', description: 'Featured projects and a grid of the rest.' },
   contact: { label: 'Contact', icon: 'lucide:mail', description: 'Closing call to action with your social links.' },
+  experience: { label: 'Experience', icon: 'lucide:briefcase', description: 'Jobs and internships: a company card with a timeline of projects.' },
   custom: { label: 'Custom', icon: 'lucide:layout-template', description: 'Heading, text, an image and links: for anything else.' },
 };
 
@@ -46,6 +47,8 @@ export function newSection(type: Section['type'], content: Content): Section {
       return { ...base, type, heading: 'Projects', projects: [] };
     case 'contact':
       return { ...base, type, heading: 'Get in touch', body: '', showSocials: true, ctas: [] };
+    case 'experience':
+      return { ...base, type, heading: 'Experience', roles: [] };
     case 'custom':
       return { ...base, type, heading: 'New section', body: '', links: [] };
   }
@@ -60,7 +63,7 @@ export function describePath(content: unknown, path: PropertyKey[]) {
   for (const key of path) {
     const next = node?.[key] as Record<string, unknown> | undefined;
     if (typeof key === 'number') {
-      const name = next?.title ?? next?.name ?? next?.label ?? next?.heading ?? (next?.type && TYPE_INFO[next.type as Section['type']]?.label);
+      const name = next?.title ?? next?.name ?? next?.company ?? next?.label ?? next?.heading ?? (next?.type && TYPE_INFO[next.type as Section['type']]?.label);
       parts.push(typeof name === 'string' && name.trim() ? name.split('\n')[0] : `#${key + 1}`);
     } else if (key !== 'sections') {
       parts.push(humanize(String(key)));

@@ -1043,3 +1043,411 @@
     display: inline;
   }
 }
+
+/* Experience ------------------------------------------------------------------------ */
+
+.exp-monogram {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid color-mix(in oklab, var(--brand) 40%, var(--line));
+  border-radius: 1rem;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--brand) 22%, var(--surface-strong)), var(--surface-strong));
+  box-shadow: 0 10px 30px -12px var(--glow);
+  color: var(--brand);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.exp-ongoing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in oklab, #34d399 35%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, #34d399 10%, transparent);
+  padding: 0.25rem 0.75rem;
+  color: color-mix(in oklab, #34d399 65%, var(--fg));
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.exp-timeline-track {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.exp-timeline-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  box-shadow: 0 0 12px var(--glow);
+  transform-origin: 0 50%;
+}
+
+.exp-timeline-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* The rail runs down the left of the project cards; each card has a node on it. */
+.exp-rail {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  padding-left: 2.5rem;
+
+  /* Scroll room for the stacking cards (height set by experience.ts). Sticky cards only stay
+     stuck within the list's content, so this has to be content, not padding. */
+  &::after {
+    content: '';
+    height: var(--stack-tail, 0px);
+  }
+}
+
+.exp-rail-line {
+  position: absolute;
+  top: 0.5rem;
+  bottom: calc(var(--stack-tail, 0px) + 0.5rem);
+  left: 0.6rem;
+  width: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.exp-rail-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--brand), var(--brand-2), #8b5cf6);
+  transform-origin: 50% 0;
+}
+
+/* Project cards stack: each sticks below the nav and the next one slides over it. */
+.exp-entry {
+  position: sticky;
+  top: var(--stack-top, 6rem);
+}
+
+/* Opaque, so a card fully covers the one beneath it. */
+.exp-card {
+  background: var(--surface-strong);
+  transform-origin: 50% 0;
+}
+
+/* Darkens a card once the next one has slid over it (opacity driven by motion.ts). Only the
+   "01 / PROJECT" label stays faintly visible, like a tab on the deck; from the title down it
+   goes fully dark, so nothing half-covered is left to read above or below the next card. */
+.exp-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--bg) 55%, transparent) 3.1rem, var(--bg) 3.4rem);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.exp-node {
+  position: absolute;
+  top: 2.4rem;
+  left: calc(-1.9rem + 1px);
+  width: 1.1rem;
+  height: 1.1rem;
+  translate: -50% -50%;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--bg);
+  transition:
+    border-color 0.4s,
+    background-color 0.4s,
+    box-shadow 0.4s;
+}
+
+.exp-entry.is-lit .exp-node {
+  border-color: var(--brand);
+  background: var(--brand);
+  box-shadow:
+    0 0 0 6px color-mix(in oklab, var(--brand) 18%, transparent),
+    0 0 24px var(--glow);
+}
+
+@media (width >= 48rem) {
+  .exp-rail {
+    padding-left: 3.5rem;
+  }
+  .exp-rail-line {
+    left: 1.1rem;
+  }
+  .exp-node {
+    left: calc(-2.4rem + 1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exp-node {
+    border-color: var(--brand);
+    background: var(--brand);
+  }
+}
+
+.exp-stat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.exp-stat-value {
+  background: linear-gradient(100deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.exp-stat-label {
+  max-width: 16rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Pipeline: vertical in narrow cards, a horizontal row once the card has room. */
+.exp-flow-wrap {
+  margin-top: 1.75rem;
+  container-type: inline-size;
+}
+
+.exp-flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.exp-flow-node {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--brand) 35%, var(--line));
+  border-radius: 0.9rem;
+  background: color-mix(in oklab, var(--surface-strong) 85%, transparent);
+  box-shadow: 0 8px 24px -16px var(--glow);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.exp-flow-index {
+  flex: none;
+  color: var(--brand);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.exp-flow-link {
+  position: relative;
+  align-self: center;
+  width: 2px;
+  height: 1.6rem;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 60%, transparent), color-mix(in oklab, var(--brand-2) 60%, transparent));
+}
+
+/* A glowing packet travels along each link (transform only, so it runs on the GPU). */
+.exp-flow-packet {
+  position: absolute;
+  inset: 0;
+  animation: packet-y 1.6s linear infinite;
+  animation-delay: var(--delay, 0s);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: var(--brand-2);
+    box-shadow:
+      0 0 10px var(--brand-2),
+      0 0 20px var(--brand);
+  }
+}
+
+@keyframes packet-y {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes packet-x {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@container (width >= 34rem) {
+  .exp-flow {
+    flex-direction: row;
+    align-items: center;
+  }
+  .exp-flow-node {
+    max-width: 10rem;
+  }
+  .exp-flow-link {
+    flex: 1;
+    min-width: 1.25rem;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--brand) 60%, transparent), color-mix(in oklab, var(--brand-2) 60%, transparent));
+  }
+  .exp-flow-packet {
+    animation-name: packet-x;
+  }
+  .exp-flow-packet::after {
+    top: 50%;
+    left: 0;
+  }
+}
+
+/* Terminal: always dark, like a real one. Lines type in when it scrolls into view. */
+.exp-console {
+  margin-top: 1.75rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: #0b0f15;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.exp-console-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  background: #11161e;
+  padding: 0.6rem 0.9rem;
+
+  & span {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+  }
+  & em {
+    margin-left: 0.5rem;
+    color: #6e7681;
+    font-size: 0.75rem;
+    font-style: normal;
+  }
+}
+
+.exp-console-lines {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.9rem 1rem;
+  color: #c9d1d9;
+
+  & li {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  & .is-prompt {
+    color: #8b949e;
+  }
+  & .is-error {
+    color: #ff7b72;
+  }
+  & .is-retry {
+    color: #ffa657;
+  }
+  & .is-success {
+    color: #7ee787;
+  }
+}
+
+.exp-console.is-armed:not(.is-playing) li {
+  opacity: 0;
+}
+
+.exp-console.is-playing li {
+  animation: console-line 0.45s var(--ease-out-expo) both;
+  animation-delay: calc(var(--line) * 650ms + 200ms);
+}
+
+.exp-console.is-playing li:last-child::after {
+  content: '▋';
+  margin-left: 0.35rem;
+  color: var(--brand);
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes console-line {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exp-flow-packet,
+  .exp-console.is-playing li,
+  .exp-console.is-playing li:last-child::after {
+    animation: none;
+  }
+}
+
+.exp-brand {
+  border: 1px solid var(--line-strong);
+  border-radius: 0.8rem;
+  background: color-mix(in oklab, var(--surface-strong) 80%, transparent);
+  padding: 0.55rem 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}

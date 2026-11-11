@@ -2,7 +2,7 @@ import { Icon } from '@iconify/react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { contentSchema, type Content, type Section, type Site } from '../data/schema';
 import { TYPE_INFO, describePath, replaceAt, sectionTitle } from './content';
-import { AboutEditor, ContactEditor, CustomEditor, HeroEditor, ProjectsEditor, SectionSettings, SkillsEditor, StatusEditor } from './editors';
+import { AboutEditor, ContactEditor, CustomEditor, ExperienceEditor, HeroEditor, ProjectsEditor, SectionSettings, SkillsEditor, StatusEditor } from './editors';
 import { AddSectionPanel, HistoryPanel, SitePanel } from './panels';
 import { useDraft, type SaveState } from './store';
 import { accessToken, supabase } from './supabase';
@@ -297,6 +297,7 @@ function SectionEditor({ section, index, content, onChange }: { section: Section
       {section.type === 'skills' && <SkillsEditor section={section} onChange={onChange} {...props} />}
       {section.type === 'projects' && <ProjectsEditor section={section} onChange={onChange} {...props} />}
       {section.type === 'contact' && <ContactEditor section={section} onChange={onChange} {...props} />}
+      {section.type === 'experience' && <ExperienceEditor section={section} onChange={onChange} {...props} />}
       {section.type === 'custom' && <CustomEditor section={section} onChange={onChange} {...props} />}
     </>
   );

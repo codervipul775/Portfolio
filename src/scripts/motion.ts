@@ -59,7 +59,7 @@ if (!reduceMotion) {
     ScrollTrigger.batch('[data-reveal]', {
       start: 'top 90%',
       once: true,
-      onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true }),
+      onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: 'auto' }),
     });
   });
 
@@ -106,6 +106,52 @@ if (!reduceMotion) {
     scaleX: 1,
     ease: 'none',
     scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
+  });
+
+  later(() => {
+    // Experience: the rail fills as you scroll through the projects, lighting each one's node;
+    // the timeline bar on the company card fills once as it comes into view.
+    for (const rail of $$('[data-exp-rail]')) {
+      const fill = rail.querySelector('[data-exp-rail-fill]');
+      if (fill) {
+        gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: rail, start: 'top 65%', end: 'bottom 65%', scrub: 0.6 } });
+      }
+      const entries = $$('[data-exp-entry]', rail);
+      entries.forEach((entry, i) => {
+        ScrollTrigger.create({ trigger: entry, start: 'top 65%', toggleClass: 'is-lit' });
+        // Stacking: while the next card slides over this one, this one shrinks a little, dims,
+        // and is trimmed to end just below the next card, so none of its content shows beneath
+        // a shorter card (only a thin edge, like a deck).
+        const next = entries[i + 1];
+        const card = entry.querySelector<HTMLElement>('.exp-card');
+        const nextCard = next?.querySelector<HTMLElement>('.exp-card');
+        if (!next || !card || !nextCard) return;
+        const scale = 0.92;
+        const edge = 14; // px of this card left showing below the next one
+        const trimmed = () => {
+          const top = parseFloat(getComputedStyle(entry).top);
+          const nextBottom = parseFloat(getComputedStyle(next).top) + nextCard.offsetHeight;
+          const keep = (nextBottom + edge - top) / scale;
+          return `inset(0px 0px ${Math.max(0, card.offsetHeight - keep)}px 0px round 24px)`;
+        };
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: next,
+              start: 'top bottom',
+              end: () => `top ${parseFloat(getComputedStyle(next).top) || 96}px`,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          })
+          .to(card, { scale, ease: 'none' }, 0)
+          .fromTo(card, { clipPath: 'inset(0px 0px 0px 0px round 24px)' }, { clipPath: trimmed, ease: 'none' }, 0)
+          .to(entry.querySelector('.exp-dim'), { opacity: 1, ease: 'none' }, 0);
+      });
+    }
+    for (const fill of $$('[data-exp-fill]')) {
+      gsap.fromTo(fill, { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: fill, start: 'top 90%', once: true } });
+    }
   });
 
   later(() => {

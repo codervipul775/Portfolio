@@ -174,7 +174,7 @@ export function HistoryPanel({ replaceDraft }: { replaceDraft: (content: Content
 }
 
 export function AddSectionPanel({ onAdd, draft }: { onAdd: (section: Section) => void; draft: Content }) {
-  const order: Section['type'][] = ['custom', 'projects', 'skills', 'status', 'about', 'contact', 'hero'];
+  const order: Section['type'][] = ['custom', 'experience', 'projects', 'skills', 'status', 'about', 'contact', 'hero'];
   return (
     <Card title="Add a section" description="It's added at the end; drag it into place in the sidebar.">
       <div className="grid gap-3 sm:grid-cols-2">
