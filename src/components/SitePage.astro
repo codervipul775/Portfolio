@@ -8,6 +8,7 @@ import Nav from './Nav.astro';
 import About from './sections/About.astro';
 import Contact from './sections/Contact.astro';
 import Custom from './sections/Custom.astro';
+import Experience from './sections/Experience.astro';
 import Hero from './sections/Hero.astro';
 import Projects from './sections/Projects.astro';
 import Skills from './sections/Skills.astro';
@@ -33,6 +34,7 @@ const defaultLabels: Record<Section['type'], string> = {
   skills: 'Skills',
   projects: 'Projects',
   contact: 'Contact',
+  experience: 'Experience',
   custom: 'More',
 };
 
@@ -78,6 +80,8 @@ const sceneJson = JSON.stringify(sceneData).replace(/</g, '\\u003c');
             return <Projects section={section} index={index} label={label} />;
           case 'contact':
             return <Contact section={section} site={site} index={index} label={label} />;
+          case 'experience':
+            return <Experience section={section} index={index} label={label} />;
           case 'custom':
             return <Custom section={section} index={index} label={label} />;
         }
@@ -102,5 +106,6 @@ const sceneJson = JSON.stringify(sceneData).replace(/</g, '\\u003c');
   import '../scripts/motion';
   import '../scripts/skill-sphere';
   import '../scripts/dotted-image';
+  import '../scripts/experience';
   import '../scripts/scene-loader';
 </script>

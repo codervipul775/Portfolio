@@ -11,7 +11,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "seed:sql": "node scripts/gen-seed-sql.ts"
+    "seed:sql": "node scripts/gen-seed-sql.ts",
+    "section:sql": "node scripts/gen-section-sql.ts",
+    "dev:seed": "PUBLIC_SUPABASE_URL= PUBLIC_SUPABASE_PUBLISHABLE_KEY= astro dev"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.4",

@@ -12,7 +12,7 @@ export function ImageInput({
   value,
   onChange,
   folder = 'images',
-  aspect = 'aspect-video',
+  aspect = 'aspect-video max-w-md',
 }: {
   value: ImageRef | undefined;
   onChange: (value: ImageRef | undefined) => void;
@@ -55,7 +55,7 @@ export function ImageInput({
           upload(e.dataTransfer.files[0]);
         }}
         className={cx(
-          'group relative block w-full max-w-md overflow-hidden rounded-xl border border-dashed bg-bg/40 transition',
+          'group relative block w-full overflow-hidden rounded-xl border border-dashed bg-bg/40 transition',
           aspect,
           dragging ? 'border-brand bg-brand/10' : 'border-line-strong hover:border-brand',
         )}

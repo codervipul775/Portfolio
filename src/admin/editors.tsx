@@ -428,6 +428,153 @@ export function ContactEditor({ section, onChange, path }: EditorProps<'contact'
   );
 }
 
+type Role = SectionOf<'experience'>['roles'][number];
+type RoleProject = Role['projects'][number];
+
+const newRole = (): Role => ({
+  id: newId('role'),
+  company: 'Company',
+  role: 'Role',
+  start: new Date().toISOString().slice(0, 7),
+  summary: '',
+  projects: [],
+});
+
+const newRoleProject = (): RoleProject => ({
+  id: newId('project'),
+  title: 'New project',
+  summary: '',
+  flow: [],
+  console: [],
+  highlights: [],
+  brands: [],
+  tags: [],
+});
+
+/** A text box where each line is one item of a list. */
+function LinesInput({ value, onChange, rows = 4, placeholder }: { value: string[]; onChange: (v: string[]) => void; rows?: number; placeholder?: string }) {
+  return <TextArea value={value.join('\n')} onChange={(text) => onChange(text.split('\n'))} rows={rows} placeholder={placeholder} />;
+}
+
+export function ExperienceEditor({ section, onChange, path }: EditorProps<'experience'>) {
+  return (
+    <>
+      <Card title="Heading">
+        <Field label="Heading" path={[...path, 'heading']}>
+          <TextInput value={section.heading} onChange={(heading) => onChange({ ...section, heading })} />
+        </Field>
+      </Card>
+      <Card title="Roles" description="Each role gets a company card and a timeline of its projects.">
+        <SortableList
+          items={section.roles}
+          onChange={(roles) => onChange({ ...section, roles })}
+          itemKey={(role) => role.id}
+          itemLabel={(role) => `${role.role} · ${role.company}`}
+          collapsible
+          confirmRemove
+          renderSummary={(role) => <span className="tag shrink-0">{role.projects.length} projects</span>}
+          onAdd={newRole}
+          addLabel="Add role"
+          renderItem={(role, update, ri) => {
+            const rolePath = [...path, 'roles', ri];
+            return (
+              <>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field label="Company" path={[...rolePath, 'company']}>
+                    <TextInput value={role.company} onChange={(company) => update({ ...role, company })} />
+                  </Field>
+                  <Field label="Role" path={[...rolePath, 'role']}>
+                    <TextInput value={role.role} onChange={(value) => update({ ...role, role: value })} />
+                  </Field>
+                  <Field label="Type" hint="e.g. Paid internship, Full-time.">
+                    <TextInput value={role.kind} onChange={(kind) => update({ ...role, kind: kind || undefined })} />
+                  </Field>
+                  <Field label="Location" hint="Optional.">
+                    <TextInput value={role.location} onChange={(location) => update({ ...role, location: location || undefined })} />
+                  </Field>
+                  <Field label="Start" path={[...rolePath, 'start']}>
+                    <TextInput type="month" value={role.start} onChange={(start) => update({ ...role, start })} placeholder="2026-06" />
+                  </Field>
+                  <Field label="End" hint="Leave empty while it's ongoing." path={[...rolePath, 'end']}>
+                    <TextInput type="month" value={role.end} onChange={(end) => update({ ...role, end: end || undefined })} placeholder="2026-11" />
+                  </Field>
+                </div>
+                <Field label="Logo" group hint="Optional. Without one, the company's initials are shown.">
+                  <ImageInput value={role.logo} onChange={(logo) => update({ ...role, logo })} folder="logos" aspect="aspect-square max-w-32" />
+                </Field>
+                <Field label="Summary" hint={markdownHint}>
+                  <MarkdownInput value={role.summary} onChange={(summary) => update({ ...role, summary })} rows={3} />
+                </Field>
+                <Field label="Projects" group>
+                  <SortableList
+                    items={role.projects}
+                    onChange={(projects) => update({ ...role, projects })}
+                    itemKey={(project) => project.id}
+                    itemLabel={(project) => project.title}
+                    collapsible
+                    confirmRemove
+                    onAdd={newRoleProject}
+                    addLabel="Add project"
+                    renderItem={(project, updateProject, pi) => {
+                      const projectPath = [...rolePath, 'projects', pi];
+                      return (
+                        <>
+                          <Field label="Title" path={[...projectPath, 'title']}>
+                            <TextInput value={project.title} onChange={(title) => updateProject({ ...project, title })} />
+                          </Field>
+                          <div className="grid gap-5 sm:grid-cols-[12rem_minmax(0,1fr)]">
+                            <Field label="Headline figure" hint="Shown large, e.g. ₹1 Cr+. Optional.">
+                              <TextInput
+                                value={project.stat?.value ?? ''}
+                                onChange={(value) => updateProject({ ...project, stat: value ? { value, label: project.stat?.label ?? '' } : undefined })}
+                              />
+                            </Field>
+                            <Field label="Caption for the figure">
+                              <TextInput
+                                value={project.stat?.label ?? ''}
+                                disabled={!project.stat}
+                                onChange={(label) => project.stat && updateProject({ ...project, stat: { ...project.stat, label } })}
+                                placeholder={project.stat ? '' : 'Add a figure first'}
+                              />
+                            </Field>
+                          </div>
+                          <Field label="Summary" hint={markdownHint}>
+                            <MarkdownInput value={project.summary} onChange={(summary) => updateProject({ ...project, summary })} rows={2} />
+                          </Field>
+                          <Field label="Pipeline steps" group hint="In order; shown as an animated flow. Optional.">
+                            <TagInput value={project.flow} onChange={(flow) => updateProject({ ...project, flow })} placeholder="Shopify order, ERPNext…" />
+                          </Field>
+                          <Field label="Terminal lines" hint="One per line, typed out on the site. Start a line with $, ✗, ↻ or ✓ to colour it. Optional.">
+                            <LinesInput value={project.console} onChange={(lines) => updateProject({ ...project, console: lines })} />
+                          </Field>
+                          <Field label="Highlights" hint="One per line.">
+                            <LinesInput value={project.highlights} onChange={(highlights) => updateProject({ ...project, highlights })} />
+                          </Field>
+                          <div className="grid gap-5 sm:grid-cols-[14rem_minmax(0,1fr)]">
+                            <Field label="Brands heading" hint="e.g. Partner to brands like">
+                              <TextInput value={project.brandsLabel} onChange={(v) => updateProject({ ...project, brandsLabel: v || undefined })} />
+                            </Field>
+                            <Field label="Brands" group hint="Optional.">
+                              <TagInput value={project.brands} onChange={(brands) => updateProject({ ...project, brands })} />
+                            </Field>
+                          </div>
+                          <Field label="Tech tags" group>
+                            <TagInput value={project.tags} onChange={(tags) => updateProject({ ...project, tags })} />
+                          </Field>
+                        </>
+                      );
+                    }}
+                  />
+                </Field>
+              </>
+            );
+          }}
+        />
+      </Card>
+    </>
+  );
+}
+
 export function CustomEditor({ section, onChange, path }: EditorProps<'custom'>) {
   return (
     <>

@@ -150,6 +150,48 @@ export const contactSectionSchema = z.object({
   ctas: z.array(linkSchema),
 });
 
+/** Year and month, e.g. "2026-06". */
+const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Use YYYY-MM, e.g. 2026-06');
+
+export const experienceProjectSchema = z.object({
+  id,
+  title: required,
+  /** Headline figure shown large, e.g. value "₹1 Cr+" with label "daily sales". */
+  stat: z.object({ value: required, label: z.string() }).optional(),
+  summary: markdown.default(''),
+  /** Pipeline steps in order, drawn as an animated flow (e.g. Shopify → ERPNext → …). */
+  flow: z.array(z.string()).default([]),
+  /** Lines for the terminal that types itself out. A leading $, ✗, ↻ or ✓ sets the colour. */
+  console: z.array(z.string()).default([]),
+  highlights: z.array(z.string()).default([]),
+  /** Names for a "brands like…" row, e.g. clients served. */
+  brandsLabel: z.string().optional(),
+  brands: z.array(z.string()).default([]),
+  tags: z.array(z.string()).default([]),
+});
+
+export const experienceRoleSchema = z.object({
+  id,
+  company: required,
+  role: required,
+  /** e.g. "Paid internship" or "Full-time". */
+  kind: z.string().optional(),
+  start: month,
+  /** Leave out while it's ongoing. */
+  end: month.optional(),
+  location: z.string().optional(),
+  logo: imageSchema.optional(),
+  summary: markdown.default(''),
+  projects: z.array(experienceProjectSchema),
+});
+
+export const experienceSectionSchema = z.object({
+  ...sectionBase,
+  type: z.literal('experience'),
+  heading: z.string(),
+  roles: z.array(experienceRoleSchema),
+});
+
 /** Free-form section for anything the other types don't cover. */
 export const customSectionSchema = z.object({
   ...sectionBase,
@@ -167,6 +209,7 @@ export const sectionSchema = z.discriminatedUnion('type', [
   skillsSectionSchema,
   projectsSectionSchema,
   contactSectionSchema,
+  experienceSectionSchema,
   customSectionSchema,
 ]);
 
